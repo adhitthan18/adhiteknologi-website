@@ -8,18 +8,18 @@ import { useIsHydrated, usePrefersReducedMotion } from "@/lib/use-client-env";
 
 const PALETTES = {
   light: {
-    node: "#15803d",
+    node: "#4338ca",
     nodeAlt: "#0e7490",
-    line: "#0f766e",
+    line: "#4f46e5",
     shell: "#0e7490",
-    lineOpacity: 0.28,
+    lineOpacity: 0.26,
   },
   dark: {
-    node: "#34d399",
+    node: "#818cf8",
     nodeAlt: "#22d3ee",
-    line: "#22c55e",
+    line: "#6366f1",
     shell: "#22d3ee",
-    lineOpacity: 0.22,
+    lineOpacity: 0.24,
   },
 } as const;
 

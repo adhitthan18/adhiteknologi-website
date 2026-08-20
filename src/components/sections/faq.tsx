@@ -1,22 +1,25 @@
 import { PlusIcon } from "@phosphor-icons/react/dist/ssr";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { Reveal } from "@/components/ui/reveal";
-import { faqs } from "@/lib/site-config";
+import { sectionIds } from "@/lib/site-config";
+import type { Dictionary } from "@/lib/i18n";
 
-export function Faq() {
+export function Faq({ dict }: { dict: Dictionary }) {
+  const t = dict.faq;
+
   return (
-    <section id="faq" className="border-t border-line py-24 sm:py-32">
+    <section id={sectionIds.faq} className="border-t border-line py-24 sm:py-32">
       <div className="container-page">
         <SectionHeading
-          eyebrow="FAQ"
-          title="Pertanyaan yang paling sering masuk"
-          description="Belum terjawab di sini? Kirim pertanyaannya lewat form di bawah — biasanya dibalas di hari yang sama."
+          eyebrow={t.eyebrow}
+          title={t.title}
+          description={t.description}
           align="center"
         />
 
         {/* <details> bawaan browser: bisa dibuka lewat keyboard dan tetap jalan tanpa JavaScript. */}
         <div className="mx-auto mt-14 flex max-w-3xl flex-col gap-3">
-          {faqs.map((faq) => (
+          {t.items.map((faq) => (
             <Reveal
               key={faq.q}
               as="details"

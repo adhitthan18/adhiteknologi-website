@@ -1,27 +1,26 @@
 import { SectionHeading } from "@/components/ui/section-heading";
 import { Reveal } from "@/components/ui/reveal";
-import { techStack } from "@/lib/site-config";
+import { sectionIds, techGroups } from "@/lib/site-config";
+import type { Dictionary } from "@/lib/i18n";
 
-const marqueeItems = techStack.flatMap((group) => group.items);
+const marqueeItems = techGroups.flatMap((group) => group.items);
 
-export function Tech() {
+export function Tech({ dict }: { dict: Dictionary }) {
+  const t = dict.tech;
+
   return (
-    <section id="teknologi" className="overflow-hidden py-24 sm:py-32">
+    <section id={sectionIds.tech} className="overflow-hidden py-24 sm:py-32">
       <div className="container-page">
-        <SectionHeading
-          eyebrow="Teknologi"
-          title="Perkakas yang kami pakai sehari-hari"
-          description="Dipilih karena stabil dan mudah dirawat jangka panjang — bukan karena sedang ramai dibicarakan."
-        />
+        <SectionHeading eyebrow={t.eyebrow} title={t.title} description={t.description} />
 
         <div className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {techStack.map((group) => (
+          {techGroups.map((group) => (
             <Reveal
-              key={group.group}
+              key={group.id}
               className="rounded-[var(--radius-card)] border border-line bg-surface p-6"
             >
               <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-brand">
-                {group.group}
+                {t.groups[group.id]}
               </h3>
               <ul className="mt-4 flex flex-wrap gap-2">
                 {group.items.map((item) => (

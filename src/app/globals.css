@@ -27,14 +27,14 @@
   --border-strong: #cdd7e6;
 
   /* Brand */
-  --brand: #15803d; /* hijau — aksen utama, aman untuk teks di light */
-  --brand-vivid: #16a34a;
+  --brand: #4338ca; /* indigo — aksen utama, 7,5:1 di atas --bg */
+  --brand-vivid: #4f46e5;
   --brand-fg: #ffffff;
-  --brand-soft: rgba(22, 163, 74, 0.1);
+  --brand-soft: rgba(67, 56, 202, 0.1);
 
   /* Pilar layanan */
-  --web: #4338ca;
-  --web-soft: rgba(67, 56, 202, 0.1);
+  --web: #1d4ed8;
+  --web-soft: rgba(29, 78, 216, 0.1);
   --iot: #0e7490;
   --iot-soft: rgba(14, 116, 144, 0.1);
   --pos: #c2410c;
@@ -45,7 +45,7 @@
   --warning: #b45309;
   --danger: #b91c1c;
 
-  --ring: #16a34a;
+  --ring: #4338ca;
   --shadow-color: 218 42% 18%;
 
   color-scheme: light;
@@ -66,13 +66,13 @@
   --border: #1d2a42;
   --border-strong: #2c3d5c;
 
-  --brand: #22c55e;
-  --brand-vivid: #4ade80;
-  --brand-fg: #04140a;
-  --brand-soft: rgba(34, 197, 94, 0.14);
+  --brand: #818cf8;
+  --brand-vivid: #a5b4fc;
+  --brand-fg: #0b1020;
+  --brand-soft: rgba(129, 140, 248, 0.16);
 
-  --web: #a5b4fc;
-  --web-soft: rgba(129, 140, 248, 0.16);
+  --web: #7dd3fc;
+  --web-soft: rgba(125, 211, 252, 0.14);
   --iot: #22d3ee;
   --iot-soft: rgba(34, 211, 238, 0.14);
   --pos: #fbbf24;
@@ -82,7 +82,7 @@
   --warning: #fbbf24;
   --danger: #f87171;
 
-  --ring: #4ade80;
+  --ring: #a5b4fc;
   --shadow-color: 220 60% 2%;
 
   color-scheme: dark;

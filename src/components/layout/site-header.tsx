@@ -5,11 +5,14 @@ import Link from "next/link";
 import { ListIcon, XIcon } from "@phosphor-icons/react/dist/ssr";
 import { Logo } from "./logo";
 import { ThemeToggle } from "./theme-toggle";
+import { LanguageSwitcher } from "./language-switcher";
 import { ButtonLink } from "@/components/ui/button";
-import { navLinks } from "@/lib/site-config";
+import { sectionIds } from "@/lib/site-config";
+import type { Dictionary, Locale } from "@/lib/i18n";
 import { cn } from "@/lib/cn";
 
-export function SiteHeader() {
+export function SiteHeader({ dict, locale }: { dict: Dictionary; locale: Locale }) {
+  const t = dict.nav;
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -44,12 +47,12 @@ export function SiteHeader() {
       )}
     >
       <div className="container-page flex h-20 items-center justify-between gap-4">
-        <Link href="/" aria-label="Adhi Teknologi — beranda">
+        <Link href={`/${locale}`} aria-label={t.home}>
           <Logo />
         </Link>
 
-        <nav aria-label="Navigasi utama" className="hidden items-center gap-1 lg:flex">
-          {navLinks.map((link) => (
+        <nav aria-label={t.mainNav} className="hidden items-center gap-1 lg:flex">
+          {t.links.map((link) => (
             <Link
               key={link.href}
               href={link.href}
@@ -61,20 +64,28 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <ThemeToggle />
-          {/* Dibungkus agar aturan sembunyi tidak bertabrakan dengan `inline-flex` bawaan tombol. */}
+          {/* Pembungkus menahan aturan sembunyi; `inline-flex` milik komponen tidak bisa menimpanya. */}
           <div className="hidden sm:block">
-            <ButtonLink href="#kontak">Konsultasi gratis</ButtonLink>
+            <LanguageSwitcher locale={locale} labels={dict.language} />
+          </div>
+          <ThemeToggle labels={dict.theme} />
+          {/* Dibungkus agar aturan sembunyi tidak bertabrakan dengan `inline-flex` bawaan tombol. */}
+          <div className="hidden lg:block">
+            <ButtonLink href={`#${sectionIds.contact}`}>{t.cta}</ButtonLink>
           </div>
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
             aria-expanded={open}
             aria-controls="menu-mobile"
-            aria-label={open ? "Tutup menu" : "Buka menu"}
+            aria-label={open ? t.closeMenu : t.openMenu}
             className="inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-line text-fg lg:hidden"
           >
-            {open ? <XIcon size={20} weight="bold" aria-hidden /> : <ListIcon size={20} weight="bold" aria-hidden />}
+            {open ? (
+              <XIcon size={20} weight="bold" aria-hidden />
+            ) : (
+              <ListIcon size={20} weight="bold" aria-hidden />
+            )}
           </button>
         </div>
       </div>
@@ -84,8 +95,8 @@ export function SiteHeader() {
         hidden={!open}
         className="border-t border-line bg-glass-strong backdrop-blur-xl lg:hidden"
       >
-        <nav aria-label="Navigasi mobile" className="container-page flex flex-col gap-1 py-4">
-          {navLinks.map((link) => (
+        <nav aria-label={t.mobileNav} className="container-page flex flex-col gap-1 py-4">
+          {t.links.map((link) => (
             <Link
               key={link.href}
               href={link.href}
@@ -95,8 +106,16 @@ export function SiteHeader() {
               {link.label}
             </Link>
           ))}
-          <ButtonLink href="#kontak" size="lg" className="mt-2" onClick={() => setOpen(false)}>
-            Konsultasi gratis
+          <div className="mt-3 sm:hidden">
+            <LanguageSwitcher locale={locale} labels={dict.language} />
+          </div>
+          <ButtonLink
+            href={`#${sectionIds.contact}`}
+            size="lg"
+            className="mt-3"
+            onClick={() => setOpen(false)}
+          >
+            {t.cta}
           </ButtonLink>
         </nav>
       </div>

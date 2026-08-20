@@ -1,8 +1,8 @@
 # Adhi Teknologi — Company Profile
 
-Situs company profile untuk **adhiteknologi.com**. Menampilkan tiga pilar layanan
-(website, IoT, sistem POS) beserta produk yang sudah berjalan: `iotmaxhub.com` dan
-`satumeja.com`.
+Situs company profile dua bahasa (Indonesia & Inggris) untuk **adhiteknologi.com**.
+Menampilkan tiga pilar layanan — website, IoT, sistem POS — beserta produk yang sudah
+berjalan: `iotmaxhub.com` dan `satumeja.com`.
 
 ## Stack
 
@@ -12,7 +12,8 @@ Situs company profile untuk **adhiteknologi.com**. Menampilkan tiga pilar layana
 | Styling | Tailwind CSS v4 dengan design token CSS variable |
 | 3D | Three.js via `@react-three/fiber` |
 | Animasi | GSAP + ScrollTrigger (`useGSAP`) |
-| Tema | `next-themes` (dark / light / mengikuti sistem) |
+| Tema | `next-themes` (gelap / terang / mengikuti sistem) |
+| Bahasa | Routing `/[lang]` bawaan Next.js, tanpa library i18n |
 | Ikon | Phosphor Icons (SVG, bukan emoji) |
 | Font | Plus Jakarta Sans + JetBrains Mono via `next/font` |
 
@@ -22,7 +23,9 @@ Situs company profile untuk **adhiteknologi.com**. Menampilkan tiga pilar layana
 npm run dev
 ```
 
-Buka http://localhost:3000
+- http://localhost:3000/id — Bahasa Indonesia
+- http://localhost:3000/en — English
+- http://localhost:3000 — dialihkan ke `/id`
 
 ```bash
 npm run build && npm start
@@ -33,33 +36,53 @@ npm run build && npm start
 ```
 src/
 ├─ app/
-│  ├─ layout.tsx        metadata, font, provider tema, JSON-LD Organization
-│  ├─ page.tsx          susunan seluruh section
-│  ├─ globals.css       design token light & dark + utility kustom
-│  ├─ icon.svg          favicon
+│  ├─ [lang]/
+│  │  ├─ layout.tsx      root layout: <html lang>, metadata per bahasa, hreflang, JSON-LD
+│  │  └─ page.tsx        susunan seluruh section
+│  ├─ globals.css        design token terang & gelap + utility kustom
+│  ├─ icon.svg           favicon
 │  ├─ robots.ts / sitemap.ts
 ├─ components/
-│  ├─ three/            scene 3D hero (Canvas + jaringan node)
-│  ├─ layout/           header, footer, logo, tombol tema
-│  ├─ sections/         hero, stats, layanan, produk, proses, why-us, tech, faq, kontak
-│  ├─ ui/               button, section-heading, reveal (animasi scroll)
-│  └─ providers/        pembungkus next-themes
+│  ├─ three/             scene 3D hero (Canvas + jaringan node)
+│  ├─ layout/            header, footer, logo, tombol tema, pengalih bahasa
+│  ├─ sections/          hero, stats, layanan, produk, proses, why-us, tech, faq, kontak
+│  ├─ ui/                button, section-heading, reveal (animasi scroll)
+│  └─ providers/         pembungkus next-themes
 └─ lib/
-   ├─ site-config.ts    SELURUH TEKS DAN DATA SITUS ADA DI SINI
-   └─ use-client-env.ts hook reduced-motion & status hydration
+   ├─ dictionaries/
+   │  ├─ id.ts           SELURUH TEKS BAHASA INDONESIA
+   │  └─ en.ts           SELURUH TEKS BAHASA INGGRIS
+   ├─ i18n.ts            daftar bahasa, tipe Dictionary, pemuat kamus
+   ├─ site-config.ts     data yang tidak diterjemahkan (kontak, domain, tech stack)
+   └─ use-client-env.ts  hook reduced-motion & status hydration
 ```
 
-## Yang perlu diganti sebelum go-live
+## Dua bahasa
 
-Semua ada di [`src/lib/site-config.ts`](src/lib/site-config.ts):
+Setiap bahasa punya URL sendiri (`/id`, `/en`) dan dirender statis saat build, jadi
+keduanya bisa diindeks mesin pencari dan dibagikan sebagai tautan.
 
-- `email`, `phone`, `whatsapp` — saat ini masih placeholder (`halo@adhiteknologi.com`,
-  `+62 812-0000-0000`). Nomor `whatsapp` memakai format internasional tanpa `+`,
-  misalnya `6281234567890`.
-- `social.instagram` / `linkedin` / `github` — ganti atau hapus dari daftar di
-  `src/components/layout/site-footer.tsx` bila belum punya.
-- `stats` — angka di sana sengaja konservatif dan bisa diverifikasi. Kalau nanti sudah
-  ada jumlah klien atau project nyata, ganti dengan angka itu.
+- Semua teks ada di `src/lib/dictionaries/`. Nama teknologi (Next.js, ESP32, MQTT…)
+  sengaja tidak diterjemahkan dan tetap di `site-config.ts`.
+- `Dictionary` diturunkan dari `id.ts` (`type Dictionary = typeof id`), jadi **build
+  akan gagal** kalau terjemahan Inggris kehilangan atau menambah satu kunci pun.
+  Ini yang menjaga kedua bahasa tetap sinkron.
+- Pengalih bahasa berupa dua tautan `<a>` biasa, bukan tombol JavaScript, lengkap
+  dengan `hreflang` dan `aria-current`.
+- Menambah bahasa ketiga: buat `dictionaries/xx.ts`, tambahkan kodenya ke `locales`
+  di `i18n.ts`, dan tangani di `getDictionary`. Tidak ada yang lain perlu diubah.
+
+Bahasa default diatur di `next.config.ts` — akar situs `/` dialihkan ke `/id`.
+
+## Kontak
+
+Email dan nomor WhatsApp ada di `src/lib/site-config.ts`:
+
+- `iotadhiteknologi@gmail.com`
+- `+62 895-0110-2075` (`whatsapp: "6289501102075"` — format internasional tanpa `+`)
+
+Akun media sosial di `site.social` masih placeholder — ganti, atau hapus dari daftar
+`socials` di `src/components/layout/site-footer.tsx` bila belum ada.
 
 ## Formulir kontak
 
@@ -72,15 +95,17 @@ Kalau nanti ingin dikirim lewat server (Resend, SMTP, atau Formspree), ganti isi
 `handleSubmit` di `src/components/sections/contact.tsx` dengan `fetch("/api/contact")`
 dan buat route handler-nya di `src/app/api/contact/route.ts`.
 
-## Tema gelap & terang
+## Warna & tema
 
-Token warna didefinisikan dua kali di `globals.css`: `:root` untuk terang dan `.dark`
-untuk gelap. Komponen tidak pernah memakai hex langsung, selalu lewat token
-(`text-fg-muted`, `bg-surface`, `border-line`, dan seterusnya), jadi menambah atau
-mengubah warna cukup dilakukan di satu tempat.
+Aksen utama **indigo** (`#4338CA` terang / `#818CF8` gelap), dengan tiga warna pilar:
+biru untuk web, cyan untuk IoT, oranye untuk POS.
 
-Kontras teks sudah diperiksa di kedua tema dan seluruhnya memenuhi WCAG AA (≥ 4.5:1
-untuk teks normal).
+Token didefinisikan dua kali di `globals.css`: `:root` untuk terang dan `.dark` untuk
+gelap. Komponen tidak pernah memakai hex langsung, selalu lewat token (`text-fg-muted`,
+`bg-surface`, `border-line`, dan seterusnya), jadi mengganti warna cukup di satu tempat.
+
+Kontras teks diperiksa di kedua tema dan seluruhnya memenuhi WCAG AA (≥ 4.5:1 untuk
+teks normal).
 
 ## Aksesibilitas & motion
 
@@ -94,8 +119,8 @@ untuk teks normal).
 
 ## Deploy
 
-Situs ini sepenuhnya statis (semua route ter-prerender), jadi bisa dideploy ke Vercel,
-Netlify, atau VPS mana pun.
+Kedua halaman bahasa dirender statis saat build, jadi bisa dideploy ke Vercel, Netlify,
+atau VPS mana pun.
 
 ```bash
 npm run build
@@ -103,10 +128,12 @@ npm run build
 
 Di Vercel cukup hubungkan repository, tidak ada environment variable yang dibutuhkan.
 Setelah domain `adhiteknologi.com` diarahkan, pastikan `site.url` di `site-config.ts`
-sudah benar agar `sitemap.xml`, canonical URL, dan tag Open Graph ikut menyesuaikan.
+sudah benar agar `sitemap.xml`, canonical URL, `hreflang`, dan tag Open Graph ikut
+menyesuaikan.
 
 ## Referensi desain
 
 Design system hasil generate ada di
-[`design-system/adhi-teknologi/MASTER.md`](design-system/adhi-teknologi/MASTER.md) —
-berisi palet, tipografi, efek, dan anti-pattern yang dipakai sebagai acuan.
+[`design-system/adhi-teknologi/MASTER.md`](design-system/adhi-teknologi/MASTER.md).
+Palet di berkas itu masih memakai aksen hijau dari hasil generate awal — warna yang
+berlaku sekarang adalah indigo di `globals.css`.

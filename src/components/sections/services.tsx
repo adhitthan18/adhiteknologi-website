@@ -7,7 +7,8 @@ import {
 import type { Icon } from "@phosphor-icons/react";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { Reveal } from "@/components/ui/reveal";
-import { services, supportServices, type Pillar } from "@/lib/site-config";
+import { sectionIds, serviceMeta, type Pillar } from "@/lib/site-config";
+import type { Dictionary } from "@/lib/i18n";
 
 const pillarStyle: Record<Pillar, { icon: Icon; text: string; soft: string; ring: string }> = {
   web: { icon: MonitorIcon, text: "text-web", soft: "bg-web-soft", ring: "group-hover:border-web/50" },
@@ -15,23 +16,23 @@ const pillarStyle: Record<Pillar, { icon: Icon; text: string; soft: string; ring
   pos: { icon: StorefrontIcon, text: "text-pos", soft: "bg-pos-soft", ring: "group-hover:border-pos/50" },
 };
 
-export function Services() {
+export function Services({ dict }: { dict: Dictionary }) {
+  const t = dict.services;
+
   return (
-    <section id="layanan" className="py-24 sm:py-32">
+    <section id={sectionIds.services} className="py-24 sm:py-32">
       <div className="container-page">
-        <SectionHeading
-          eyebrow="Layanan"
-          title="Tiga pilar pekerjaan kami"
-          description="Tiap pilar punya kebutuhan teknis berbeda, tapi ditangani proses dan standar kualitas yang sama."
-        />
+        <SectionHeading eyebrow={t.eyebrow} title={t.title} description={t.description} />
 
         <div className="mt-14 grid gap-6 lg:grid-cols-3">
-          {services.map((service) => {
-            const style = pillarStyle[service.pillar];
+          {serviceMeta.map((meta) => {
+            const copy = t.items[meta.id];
+            const style = pillarStyle[meta.id];
             const Icon = style.icon;
+
             return (
               <Reveal
-                key={service.id}
+                key={meta.id}
                 as="article"
                 className={`group flex flex-col rounded-[var(--radius-card)] border border-line bg-surface p-7 transition-[border-color,transform,box-shadow] duration-300 ease-[var(--ease-out-expo)] hover:-translate-y-1 hover:shadow-[0_24px_60px_-32px_hsl(var(--shadow-color)/0.6)] ${style.ring}`}
               >
@@ -41,11 +42,11 @@ export function Services() {
                   <Icon size={24} weight="duotone" className={style.text} aria-hidden />
                 </span>
 
-                <h3 className="mt-6 text-xl font-bold tracking-tight">{service.title}</h3>
-                <p className="mt-3 text-[0.95rem] leading-relaxed text-fg-muted">{service.summary}</p>
+                <h3 className="mt-6 text-xl font-bold tracking-tight">{copy.title}</h3>
+                <p className="mt-3 text-[0.95rem] leading-relaxed text-fg-muted">{copy.summary}</p>
 
                 <ul className="mt-6 flex flex-col gap-3 border-t border-line pt-6">
-                  {service.points.map((point) => (
+                  {copy.points.map((point) => (
                     <li key={point} className="flex items-start gap-3 text-sm text-fg-muted">
                       <CheckIcon
                         size={16}
@@ -59,7 +60,7 @@ export function Services() {
                 </ul>
 
                 <p className="mt-auto pt-7 font-mono text-xs tracking-wide text-fg-subtle">
-                  {service.deliverable}
+                  {meta.deliverable}
                 </p>
               </Reveal>
             );
@@ -67,7 +68,7 @@ export function Services() {
         </div>
 
         <div className="mt-6 grid gap-6 md:grid-cols-3">
-          {supportServices.map((item) => (
+          {t.support.map((item) => (
             <Reveal
               key={item.title}
               className="rounded-[var(--radius-card)] border border-line bg-surface-2/50 p-6"

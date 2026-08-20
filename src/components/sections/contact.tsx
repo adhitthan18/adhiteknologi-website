@@ -8,32 +8,20 @@ import {
 } from "@phosphor-icons/react/dist/ssr";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/ui/reveal";
-import { site } from "@/lib/site-config";
+import { sectionIds, site } from "@/lib/site-config";
+import type { Dictionary } from "@/lib/i18n";
 import { cn } from "@/lib/cn";
 
 type Field = "nama" | "kontak" | "kebutuhan" | "pesan";
 type Errors = Partial<Record<Field, string>>;
 
-const kebutuhanOptions = [
-  "Website / Web App",
-  "Solusi IoT",
-  "Sistem POS / Kasir",
-  "Maintenance sistem berjalan",
-  "Belum yakin, ingin diskusi dulu",
-];
+export function Contact({ dict }: { dict: Dictionary }) {
+  const t = dict.contact;
 
-const labels: Record<Field, string> = {
-  nama: "Nama / perusahaan",
-  kontak: "Email atau nomor WhatsApp",
-  kebutuhan: "Kebutuhan",
-  pesan: "Ceritakan singkat kebutuhannya",
-};
-
-export function Contact() {
   const [values, setValues] = useState<Record<Field, string>>({
     nama: "",
     kontak: "",
-    kebutuhan: kebutuhanOptions[0],
+    kebutuhan: t.options[0],
     pesan: "",
   });
   const [errors, setErrors] = useState<Errors>({});
@@ -46,26 +34,24 @@ export function Contact() {
 
   const validate = (): Errors => {
     const next: Errors = {};
-    if (values.nama.trim().length < 2) next.nama = "Isi nama atau nama perusahaan Anda.";
-    if (values.kontak.trim().length < 6)
-      next.kontak = "Isi email atau nomor WhatsApp yang bisa kami hubungi.";
-    if (values.pesan.trim().length < 10)
-      next.pesan = "Tulis minimal satu kalimat tentang kebutuhan Anda.";
+    if (values.nama.trim().length < 2) next.nama = t.errors.nama;
+    if (values.kontak.trim().length < 6) next.kontak = t.errors.kontak;
+    if (values.pesan.trim().length < 10) next.pesan = t.errors.pesan;
     return next;
   };
 
   const composeMessage = () =>
     [
-      `Halo ${site.name}, saya ingin konsultasi.`,
+      t.messageIntro,
       "",
-      `Nama/Perusahaan: ${values.nama.trim()}`,
-      `Kontak: ${values.kontak.trim()}`,
-      `Kebutuhan: ${values.kebutuhan}`,
+      `${t.messageName}: ${values.nama.trim()}`,
+      `${t.messageContact}: ${values.kontak.trim()}`,
+      `${t.messageNeed}: ${values.kebutuhan}`,
       "",
       values.pesan.trim(),
     ].join("\n");
 
-  const handleSubmit = (event: React.FormEvent, channel: "whatsapp" | "email") => {
+  const handleSubmit = (event: React.SyntheticEvent, channel: "whatsapp" | "email") => {
     event.preventDefault();
     const found = validate();
     setErrors(found);
@@ -82,7 +68,7 @@ export function Contact() {
       channel === "whatsapp"
         ? `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(body)}`
         : `mailto:${site.email}?subject=${encodeURIComponent(
-            `Permintaan project — ${values.nama.trim()}`,
+            `${t.emailSubject} — ${values.nama.trim()}`,
           )}&body=${encodeURIComponent(body)}`;
 
     window.open(url, channel === "whatsapp" ? "_blank" : "_self", "noopener,noreferrer");
@@ -92,8 +78,11 @@ export function Contact() {
     (entry): entry is [Field, string] => Boolean(entry[1]),
   );
 
+  const summaryLabel =
+    errorList.length === 1 ? t.summaryOne : t.summaryMany.replace("{n}", String(errorList.length));
+
   return (
-    <section id="kontak" className="relative overflow-hidden py-24 sm:py-32">
+    <section id={sectionIds.contact} className="relative overflow-hidden py-24 sm:py-32">
       <div className="absolute inset-0 -z-10 grid-backdrop opacity-70" aria-hidden="true" />
 
       <div className="container-page grid gap-14 lg:grid-cols-[1fr_minmax(0,32rem)] lg:gap-20">
@@ -102,17 +91,16 @@ export function Contact() {
             as="p"
             className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-brand"
           >
-            Mulai
+            {t.eyebrow}
           </Reveal>
           <Reveal
             as="h2"
             className="mt-4 text-3xl font-extrabold leading-[1.15] tracking-tight text-balance sm:text-4xl"
           >
-            Ceritakan kebutuhan Anda, kami balas dengan langkah konkret
+            {t.title}
           </Reveal>
           <Reveal as="p" className="mt-5 text-base leading-relaxed text-fg-muted sm:text-lg">
-            Tidak perlu dokumen kebutuhan yang rapi. Cukup jelaskan masalah yang ingin diselesaikan,
-            nanti kami bantu susun ruang lingkup dan estimasinya.
+            {t.description}
           </Reveal>
 
           <Reveal className="mt-10 flex flex-col gap-3">
@@ -131,7 +119,7 @@ export function Contact() {
             >
               <WhatsappLogoIcon size={20} weight="duotone" className="text-brand" aria-hidden />
               <span className="font-medium">{site.phone}</span>
-              <span className="sr-only">(buka WhatsApp di tab baru)</span>
+              <span className="sr-only">{t.whatsappNewTab}</span>
             </a>
           </Reveal>
         </div>
@@ -151,13 +139,13 @@ export function Contact() {
             >
               <p className="flex items-center gap-2 text-sm font-semibold text-danger">
                 <WarningCircleIcon size={18} weight="bold" aria-hidden />
-                Ada {errorList.length} isian yang perlu diperbaiki
+                {summaryLabel}
               </p>
               <ul className="mt-2 flex flex-col gap-1 pl-6 text-sm text-danger">
                 {errorList.map(([field, message]) => (
                   <li key={field}>
                     <a href={`#field-${field}`} className="underline underline-offset-2">
-                      {labels[field]}: {message}
+                      {t.labels[field]}: {message}
                     </a>
                   </li>
                 ))}
@@ -168,27 +156,27 @@ export function Contact() {
           <div className="flex flex-col gap-5">
             <TextField
               id="field-nama"
-              label={labels.nama}
+              label={t.labels.nama}
               value={values.nama}
               error={errors.nama}
               autoComplete="organization"
-              placeholder="Contoh: Kopi Senja / Budi Santoso"
+              placeholder={t.placeholders.nama}
               onChange={(v) => set("nama", v)}
             />
             <TextField
               id="field-kontak"
-              label={labels.kontak}
+              label={t.labels.kontak}
               value={values.kontak}
               error={errors.kontak}
               autoComplete="email"
               inputMode="email"
-              placeholder="nama@email.com atau 08xxxxxxxxxx"
+              placeholder={t.placeholders.kontak}
               onChange={(v) => set("kontak", v)}
             />
 
             <div className="flex flex-col gap-2">
               <label htmlFor="field-kebutuhan" className="text-sm font-semibold">
-                {labels.kebutuhan}
+                {t.labels.kebutuhan}
               </label>
               <select
                 id="field-kebutuhan"
@@ -196,7 +184,7 @@ export function Contact() {
                 onChange={(e) => set("kebutuhan", e.target.value)}
                 className="min-h-12 rounded-xl border border-line bg-surface-2/60 px-4 text-sm text-fg transition-colors focus:border-brand"
               >
-                {kebutuhanOptions.map((option) => (
+                {t.options.map((option) => (
                   <option key={option} value={option}>
                     {option}
                   </option>
@@ -206,7 +194,7 @@ export function Contact() {
 
             <div className="flex flex-col gap-2">
               <label htmlFor="field-pesan" className="text-sm font-semibold">
-                {labels.pesan}
+                {t.labels.pesan}
               </label>
               <textarea
                 id="field-pesan"
@@ -215,7 +203,7 @@ export function Contact() {
                 onChange={(e) => set("pesan", e.target.value)}
                 aria-invalid={Boolean(errors.pesan)}
                 aria-describedby={errors.pesan ? "error-pesan" : "hint-pesan"}
-                placeholder="Misalnya: butuh sistem kasir untuk 2 outlet yang tetap jalan saat internet mati."
+                placeholder={t.placeholders.pesan}
                 className={cn(
                   "rounded-xl border bg-surface-2/60 px-4 py-3 text-sm text-fg transition-colors focus:border-brand",
                   errors.pesan ? "border-danger" : "border-line",
@@ -227,7 +215,7 @@ export function Contact() {
                 </p>
               ) : (
                 <p id="hint-pesan" className="text-xs text-fg-subtle">
-                  Sebutkan target waktu dan perkiraan anggaran bila sudah ada — mempercepat estimasi.
+                  {t.hint}
                 </p>
               )}
             </div>
@@ -236,7 +224,7 @@ export function Contact() {
           <div className="mt-7 flex flex-col gap-3">
             <Button type="submit" size="lg">
               <WhatsappLogoIcon size={19} weight="bold" aria-hidden />
-              Kirim lewat WhatsApp
+              {t.submitWhatsapp}
             </Button>
             <Button
               type="button"
@@ -245,12 +233,9 @@ export function Contact() {
               onClick={(event) => handleSubmit(event, "email")}
             >
               <EnvelopeSimpleIcon size={19} weight="bold" aria-hidden />
-              Kirim lewat email
+              {t.submitEmail}
             </Button>
-            <p className="text-center text-xs leading-relaxed text-fg-subtle">
-              Isian di atas hanya disusun menjadi pesan di perangkat Anda — tidak dikirim atau
-              disimpan di server situs ini.
-            </p>
+            <p className="text-center text-xs leading-relaxed text-fg-subtle">{t.privacy}</p>
           </div>
         </Reveal>
       </div>

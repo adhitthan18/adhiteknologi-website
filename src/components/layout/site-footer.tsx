@@ -5,7 +5,8 @@ import {
   LinkedinLogoIcon,
 } from "@phosphor-icons/react/dist/ssr";
 import { Logo } from "./logo";
-import { navLinks, products, services, site } from "@/lib/site-config";
+import { productMeta, sectionIds, serviceMeta, site } from "@/lib/site-config";
+import type { Dictionary, Locale } from "@/lib/i18n";
 
 const socials = [
   { href: site.social.instagram, label: "Instagram", Icon: InstagramLogoIcon },
@@ -13,13 +14,15 @@ const socials = [
   { href: site.social.github, label: "GitHub", Icon: GithubLogoIcon },
 ];
 
-export function SiteFooter() {
+export function SiteFooter({ dict, locale }: { dict: Dictionary; locale: Locale }) {
+  const t = dict.footer;
+
   return (
     <footer className="border-t border-line bg-surface/60">
       <div className="container-page grid gap-12 py-16 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
         <div className="max-w-sm">
           <Logo />
-          <p className="mt-5 text-sm leading-relaxed text-fg-muted">{site.description}</p>
+          <p className="mt-5 text-sm leading-relaxed text-fg-muted">{dict.meta.description}</p>
           <div className="mt-6 flex gap-2">
             {socials.map(({ href, label, Icon }) => (
               <a
@@ -27,7 +30,7 @@ export function SiteFooter() {
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label={`${label} ${site.name} (buka di tab baru)`}
+                aria-label={`${label} ${site.name} ${t.social}`}
                 className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-line text-fg-muted transition-colors hover:border-line-strong hover:text-fg"
               >
                 <Icon size={19} weight="regular" aria-hidden />
@@ -36,39 +39,41 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <FooterColumn title="Layanan">
-          {services.map((service) => (
-            <FooterLink key={service.id} href="#layanan">
-              {service.title.replace(" & Aplikasi Web", "").replace("Sistem ", "")}
+        <FooterColumn title={t.columns.services}>
+          {serviceMeta.map((meta) => (
+            <FooterLink key={meta.id} href={`#${sectionIds.services}`}>
+              {dict.hero.pillars[meta.id]}
             </FooterLink>
           ))}
-          <FooterLink href="#layanan">Maintenance & Support</FooterLink>
+          <FooterLink href={`#${sectionIds.services}`}>{t.maintenance}</FooterLink>
         </FooterColumn>
 
-        <FooterColumn title="Produk">
-          {products.map((product) => (
-            <FooterLink key={product.name} href={product.href} external={product.href.startsWith("http")}>
-              {product.name}
+        <FooterColumn title={t.columns.products}>
+          {productMeta.map((meta) => (
+            <FooterLink key={meta.id} href={meta.href} external={meta.href.startsWith("http")}>
+              {dict.products.items[meta.id].name}
             </FooterLink>
           ))}
         </FooterColumn>
 
-        <FooterColumn title="Perusahaan">
-          {navLinks.map((link) => (
+        <FooterColumn title={t.columns.company}>
+          {dict.nav.links.map((link) => (
             <FooterLink key={link.href} href={link.href}>
               {link.label}
             </FooterLink>
           ))}
-          <FooterLink href="#kontak">Kontak</FooterLink>
+          <FooterLink href={`#${sectionIds.contact}`}>{dict.nav.contact}</FooterLink>
         </FooterColumn>
       </div>
 
       <div className="border-t border-line">
         <div className="container-page flex flex-col gap-3 py-6 text-xs text-fg-subtle sm:flex-row sm:items-center sm:justify-between">
           <p>
-            © {new Date().getFullYear()} {site.legalName}. Seluruh hak cipta dilindungi.
+            © {new Date().getFullYear()} {site.legalName}. {t.rights}
           </p>
-          <p className="font-mono">{site.domain}</p>
+          <p className="font-mono">
+            {site.domain}/{locale}
+          </p>
         </div>
       </div>
     </footer>
@@ -105,7 +110,10 @@ function FooterLink({
           {children}
         </a>
       ) : (
-        <Link href={href} className="inline-block py-0.5 text-sm text-fg-muted transition-colors hover:text-fg">
+        <Link
+          href={href}
+          className="inline-block py-0.5 text-sm text-fg-muted transition-colors hover:text-fg"
+        >
           {children}
         </Link>
       )}
