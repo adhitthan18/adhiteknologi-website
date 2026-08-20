@@ -119,14 +119,20 @@ teks normal).
 
 ## Deploy
 
-Kedua halaman bahasa dirender statis saat build, jadi bisa dideploy ke Vercel, Netlify,
-atau VPS mana pun.
+Disiapkan untuk VPS sendiri: Node.js di balik Nginx, dikelola PM2.
 
 ```bash
-npm run build
+cp deploy/deploy.env.example deploy/deploy.env   # sekali saja, lalu isi
+./deploy/deploy.sh
 ```
 
-Di Vercel cukup hubungkan repository, tidak ada environment variable yang dibutuhkan.
+Build dikerjakan di mesin lokal dan hasilnya (± 4,5 MB terkompresi, berkat
+`output: "standalone"`) dikirim lewat SSH, jadi server tidak perlu toolchain build.
+Langkah lengkap, konfigurasi Nginx + TLS, dan cara rollback ada di
+[`deploy/README.md`](deploy/README.md).
+
+Situs ini juga tetap bisa dideploy ke Vercel atau Netlify tanpa perubahan kode.
+
 Setelah domain `adhiteknologi.com` diarahkan, pastikan `site.url` di `site-config.ts`
 sudah benar agar `sitemap.xml`, canonical URL, `hreflang`, dan tag Open Graph ikut
 menyesuaikan.
