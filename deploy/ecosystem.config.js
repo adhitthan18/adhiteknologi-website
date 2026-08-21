@@ -14,6 +14,11 @@
 const port = Number(process.env.APP_PORT) || 3000;
 const name = process.env.PM2_APP || "adhiteknologi";
 
+// Bila Node sistem masih lama dan aplikasi ini dijalankan dengan Node terpisah,
+// PM2 harus diberi tahu binary mana yang dipakai — kalau tidak, ia akan memakai
+// Node sistem dan aplikasi gagal start.
+const nodeBin = process.env.NODE_BIN || "";
+
 module.exports = {
   apps: [
     {
@@ -25,6 +30,7 @@ module.exports = {
       // trafiknya memang menuntut; untuk company profile satu proses sudah cukup.
       instances: 1,
       exec_mode: "fork",
+      ...(nodeBin ? { interpreter: nodeBin } : {}),
 
       env: {
         NODE_ENV: "production",

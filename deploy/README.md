@@ -63,6 +63,47 @@ cd /opt/src/adhiteknologi
 ./deploy/verify.sh
 ```
 
+### Kalau Node di server masih di bawah 20
+
+Next.js 16 memerlukan Node 20+. Node 18 juga sudah habis masa dukungannya sejak
+April 2025. `bootstrap.sh` memeriksanya lebih dulu dan berhenti dengan pesan jelas.
+
+**Pilihan 1 — upgrade Node sistem ke 22 LTS.** Paling sederhana, tapi ikut
+mempengaruhi aplikasi lain di server yang sama.
+
+```bash
+pm2 list                    # catat apa saja yang berjalan sebelum mengubah apa pun
+node -v
+
+curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
+apt-get install -y nodejs
+node -v                     # harus v22.x
+
+npm install -g pm2
+pm2 update                  # daemon PM2 ikut memakai Node baru
+pm2 list                    # pastikan aplikasi lain kembali online
+```
+
+**Pilihan 2 — pasang Node 22 terpisah, Node sistem dibiarkan.** Lebih aman bila
+aplikasi lain belum diuji di Node 22.
+
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+source ~/.bashrc
+nvm install 22
+
+NODE_BIN="$(nvm which 22)" APP_PORT=3020 ./deploy/bootstrap.sh
+NODE_BIN="$(nvm which 22)" APP_PORT=3020 ./deploy/verify.sh
+```
+
+`NODE_BIN` menaruh direktori Node tersebut di depan `PATH` (sehingga `npm ci` dan
+`npm run build` memakai versi yang sama) dan diteruskan ke PM2 sebagai `interpreter`,
+supaya aplikasi benar-benar dijalankan dengan Node 22 — bukan Node sistem.
+
+> Bila proses PM2 sudah pernah dibuat tanpa `NODE_BIN`, `pm2 reload` tidak mengganti
+> interpreter. Hapus dulu prosesnya, lalu bootstrap ulang:
+> `pm2 delete adhiteknologi`
+
 ### Kalau port 3000 sudah dipakai
 
 Server ini juga menjalankan situs lain. `bootstrap.sh` memeriksanya lebih dulu dan
@@ -100,6 +141,7 @@ Aman dijalankan berulang kali.
 
 | Variabel | Default | Keterangan |
 |---|---|---|
+| `NODE_BIN` | — | Path ke binary Node tertentu, bila Node sistem masih lama |
 | `APP_PORT` | `3000` | Port aplikasi di localhost |
 | `APP_DIR` | `/opt/adhiteknologi` | Direktori runtime (terpisah dari `/opt/src`) |
 | `PM2_APP` | `adhiteknologi` | Nama proses PM2 |
@@ -178,6 +220,7 @@ pm2 monit
 | Situs tampil tanpa CSS/font | `.next/static` tidak ikut tersalin — `verify.sh` menangkap ini |
 | 502 Bad Gateway | Proses PM2 mati, atau port di Nginx beda dengan port aplikasi |
 | Build terhenti tanpa pesan | Kehabisan memori; tambahkan swap lalu ulangi |
+| Node 18 terdeteksi | Lihat bagian "Kalau Node di server masih di bawah 20" |
 | `cloudflared` minta login | `cloudflared access login ssh.example.com` sekali saja |
 | Cloudflare error 526 | Mode SSL "Full (strict)" tapi sertifikat origin belum terpasang |
 | Perubahan tidak muncul | Cache Cloudflare — Purge Everything |

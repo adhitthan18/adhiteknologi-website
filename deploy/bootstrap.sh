@@ -40,9 +40,37 @@ die()  { printf "\033[1;31m✗\033[0m %s\n" "$1" >&2; exit 1; }
 # ------------------------------------------------------------- 1. pemeriksaan
 step "Memeriksa prasyarat"
 
+# NODE_BIN menunjuk Node tertentu tanpa mengubah Node sistem. Berguna bila server
+# ini juga menjalankan aplikasi lain yang masih bergantung pada versi lama.
+#   NODE_BIN=/root/.nvm/versions/node/v22.20.0/bin/node ./deploy/bootstrap.sh
+if [[ -n "${NODE_BIN:-}" ]]; then
+  [[ -x "$NODE_BIN" ]] || die "NODE_BIN tidak bisa dieksekusi: ${NODE_BIN}"
+  # Diletakkan paling depan agar node, npm, dan npx berasal dari instalasi yang sama.
+  export PATH="$(dirname "$NODE_BIN"):$PATH"
+  echo "Memakai Node dari NODE_BIN: ${NODE_BIN}"
+fi
+
 command -v node >/dev/null || die "Node.js belum terpasang."
 NODE_MAJOR="$(node -p 'process.versions.node.split(".")[0]')"
-[[ "$NODE_MAJOR" -ge 20 ]] || die "Butuh Node.js 20 atau lebih baru, terpasang $(node -v)."
+if [[ "$NODE_MAJOR" -lt 20 ]]; then
+  die "Butuh Node.js 20 atau lebih baru, yang terpasang $(node -v).
+
+Next.js 16 tidak bisa berjalan di Node 18, dan Node 18 sendiri sudah berakhir
+masa dukungannya sejak April 2025.
+
+Dua pilihan:
+
+  1) Upgrade Node sistem ke 22 LTS
+     Paling sederhana, tapi ikut mempengaruhi aplikasi lain di server ini.
+     Periksa dulu apa saja yang berjalan:  pm2 list
+
+  2) Pasang Node 22 terpisah, biarkan Node sistem apa adanya
+     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+     source ~/.bashrc && nvm install 22
+     NODE_BIN=\"\$(nvm which 22)\" ./deploy/bootstrap.sh
+
+Langkah lengkap keduanya ada di deploy/README.md."
+fi
 echo "Node.js $(node -v)"
 
 command -v npm >/dev/null || die "npm belum terpasang."
@@ -133,7 +161,7 @@ mv "${APP_DIR}/incoming" "${APP_DIR}/app"
 step "Menjalankan aplikasi lewat PM2"
 cd "${APP_DIR}/app"
 
-export APP_PORT PM2_APP
+export APP_PORT PM2_APP NODE_BIN="${NODE_BIN:-}"
 if pm2 describe "$PM2_APP" >/dev/null 2>&1; then
   pm2 reload "$PM2_APP" --update-env
 else
