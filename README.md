@@ -119,17 +119,19 @@ teks normal).
 
 ## Deploy
 
-Disiapkan untuk VPS sendiri: Node.js di balik Nginx, dikelola PM2.
+VPS sendiri: Node.js di balik Nginx, dikelola PM2. Alurnya berbasis paket —
+kirim tarball source ke `/opt/src`, lalu bootstrap di server.
 
 ```bash
-cp deploy/deploy.env.example deploy/deploy.env   # sekali saja, lalu isi
-./deploy/deploy.sh
+./deploy/pack.sh          # menghasilkan adhiteknologi.tar.gz
+# scp ke /opt/src, lalu di server:
+#   ./deploy/bootstrap.sh
+#   ./deploy/verify.sh
 ```
 
-Build dikerjakan di mesin lokal dan hasilnya (± 4,5 MB terkompresi, berkat
-`output: "standalone"`) dikirim lewat SSH, jadi server tidak perlu toolchain build.
-Langkah lengkap, konfigurasi Nginx + TLS, dan cara rollback ada di
-[`deploy/README.md`](deploy/README.md).
+Runtime memakai `output: "standalone"` sehingga yang berjalan hanya ± 24 MB.
+Perintah lengkap (termasuk lewat Cloudflare Access), konfigurasi Nginx + TLS,
+dan cara rollback ada di [`deploy/README.md`](deploy/README.md).
 
 Situs ini juga tetap bisa dideploy ke Vercel atau Netlify tanpa perubahan kode.
 

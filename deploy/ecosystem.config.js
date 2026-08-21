@@ -1,16 +1,23 @@
 /**
  * Konfigurasi PM2 untuk server produksi.
- * Dijalankan dari dalam direktori rilis (hasil salin .next/standalone).
+ * Disalin oleh deploy/bootstrap.sh ke dalam direktori runtime, lalu dijalankan
+ * dari sana (bersebelahan dengan server.js hasil build standalone).
  *
  *   pm2 start ecosystem.config.js --env production
- *   pm2 reload adhiteknologi          # rilis berikutnya, tanpa downtime
+ *   pm2 reload adhiteknologi --update-env
  *   pm2 logs adhiteknologi
- *   pm2 save                          # agar hidup lagi setelah server reboot
+ *
+ * APP_PORT dan PM2_APP dibaca dari environment supaya port di sini tidak pernah
+ * berbeda dengan port yang dipakai Nginx — keduanya diisi dari sumber yang sama
+ * oleh bootstrap.sh.
  */
+const port = Number(process.env.APP_PORT) || 3000;
+const name = process.env.PM2_APP || "adhiteknologi";
+
 module.exports = {
   apps: [
     {
-      name: "adhiteknologi",
+      name,
       script: "server.js",
       cwd: __dirname,
 
@@ -21,7 +28,7 @@ module.exports = {
 
       env: {
         NODE_ENV: "production",
-        PORT: 3000,
+        PORT: port,
         // Hanya menerima koneksi dari localhost — Nginx yang menghadap internet.
         HOSTNAME: "127.0.0.1",
       },
