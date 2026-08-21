@@ -213,6 +213,21 @@ if [[ "$SETUP_NGINX" == "1" ]] && command -v nginx >/dev/null; then
     sed -e "s/__APP_PORT__/${APP_PORT}/g" \
         -e "s/__SERVER_NAME__/${SERVER_NAME}/g" \
         deploy/nginx.conf.template > "$AVAILABLE"
+
+    # Direktif `http2 on;` baru ada sejak Nginx 1.25.1. Di versi sebelumnya —
+    # termasuk 1.24 bawaan Ubuntu 24.04 — HTTP/2 diaktifkan lewat parameter
+    # `listen ... ssl http2;`, dan `http2 on;` justru membuat nginx -t gagal
+    # dengan "unknown directive". Template memakai sintaks baru, lalu diturunkan
+    # di sini bila versi Nginx di server memang belum mendukungnya.
+    NGINX_VER="$(nginx -v 2>&1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
+    OLDEST="$(printf '%s\n%s\n' "$NGINX_VER" "1.25.1" | sort -V | head -1)"
+    if [[ "$NGINX_VER" != "1.25.1" && "$OLDEST" == "$NGINX_VER" ]]; then
+      sed -i -e 's/^\([[:space:]]*\)listen \(\[::\]:\)\?443 ssl;$/\1listen \2443 ssl http2;/' \
+             -e '/^[[:space:]]*http2 on;$/d' "$AVAILABLE"
+      echo "Nginx ${NGINX_VER}: memakai sintaks 'listen ... ssl http2'."
+    else
+      echo "Nginx ${NGINX_VER}: memakai direktif 'http2 on'."
+    fi
     echo "Ditulis: ${AVAILABLE}"
 
     [[ -L "$ENABLED" ]] || ln -s "$AVAILABLE" "$ENABLED"
