@@ -3,25 +3,24 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { useTheme } from "next-themes";
-import { NetworkSphere } from "./network-sphere";
+import { LogoMark3D } from "./logo-mark-3d";
 import { useIsHydrated, usePrefersReducedMotion } from "@/lib/use-client-env";
 
+// Warna prisma mengikuti dua varian marka di brand kit: primer untuk latar
+// terang, reverse untuk latar gelap. Nilainya sengaja sedikit dinaikkan dari
+// hex datar karena material ber-cahaya menggelapkan warna dasar.
 const PALETTES = {
-  // Warna diambil dari marka: biru korporat untuk simpul, emas sebagai aksen
-  // sesekali — meniru bilah emas yang memotong huruf A.
   light: {
-    node: "#1b4f9c",
-    nodeAlt: "#f5b301",
-    line: "#2f7ad1",
-    shell: "#2f7ad1",
-    lineOpacity: 0.26,
+    left: "#12305c",
+    right: "#2f7ad1",
+    gold: "#f5b301",
+    rim: "#8fb6ec",
   },
   dark: {
-    node: "#8fb6ec",
-    nodeAlt: "#ffd500",
-    line: "#6f9fdd",
-    shell: "#8fb6ec",
-    lineOpacity: 0.24,
+    left: "#e8eef9",
+    right: "#8fb6ec",
+    gold: "#ffd500",
+    rim: "#2f7ad1",
   },
 } as const;
 
@@ -86,11 +85,11 @@ export function HeroCanvas() {
           dpr={[1, 2]}
           frameloop={active ? "always" : "never"}
           gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
-          camera={{ position: [0, 0, 7.4], fov: 42 }}
+          camera={{ position: [0, 0, 8.2], fov: 42 }}
           onCreated={({ gl }) => gl.setClearAlpha(0)}
           fallback={null}
         >
-          <NetworkSphere palette={palette} reducedMotion={reducedMotion} />
+          <LogoMark3D palette={palette} reducedMotion={reducedMotion} />
         </Canvas>
       )}
       <WebGLGuard onFail={() => setFailed(true)} />

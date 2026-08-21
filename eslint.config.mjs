@@ -12,6 +12,11 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+
+    // Project terpisah dengan tooling sendiri (API Go + dashboard Vite untuk
+    // app. dan admin.adhiteknologi.com). Isinya termasuk bundel hasil build yang
+    // sudah diminifikasi — melintasinya menghasilkan ribuan temuan tak berguna.
+    "dashboard/**",
   ]),
 ]);
 
