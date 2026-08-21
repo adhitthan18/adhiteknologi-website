@@ -104,6 +104,17 @@ export function ScrollAnimator() {
         if (splitTarget) {
           gsap.set(splitTarget, { opacity: 1 });
           const split = new SplitText(splitTarget, { type: "words" });
+
+          // Gradien teks bekerja lewat `background-clip: text` + `color: transparent`.
+          // Begitu SplitText memindahkan teksnya ke elemen anak, anak itu mewarisi
+          // warna transparan tapi tidak mewarisi background-nya — hasilnya katanya
+          // hilang sama sekali. Gradien yang sama diberikan ke elemen kata itu
+          // sendiri supaya ia punya background untuk di-clip.
+          split.words.forEach((word) => {
+            const el = word as HTMLElement;
+            if (el.closest(".text-gradient")) el.classList.add("text-gradient");
+          });
+
           gsap.from(split.words, {
             opacity: 0,
             yPercent: 60,
