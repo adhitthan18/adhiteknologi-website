@@ -76,6 +76,30 @@ if grep -qE "(^|/)(node_modules|\.next)/" "$LIST"; then
 fi
 echo "Tidak ada node_modules / .next yang ikut terbawa."
 
+# Skrip dieksekusi di Linux. Satu carriage return saja di baris shebang membuat
+# kernel mencari interpreter bernama "bash" dan skrip gagal sebelum jalan.
+# .gitattributes sudah memaksa LF, pemeriksaan ini memastikannya benar terjadi.
+CRLF_FILES=""
+while IFS= read -r entry; do
+  case "$entry" in
+    *.sh|*.template|*.conf)
+      CR_COUNT="$(tar -xzOf "$OUT" "$entry" | tr -dc "" | wc -c)"
+      [[ "$CR_COUNT" -gt 0 ]] && CRLF_FILES="${CRLF_FILES}
+  ${entry} (${CR_COUNT} CR)"
+      ;;
+  esac
+done < "$LIST"
+
+if [[ -n "$CRLF_FILES" ]]; then
+  echo "Berkas berikut memakai CRLF dan akan gagal jalan di Linux:" >&2
+  printf "%b
+" "$CRLF_FILES" >&2
+  echo >&2
+  echo "Perbaiki dengan: sed -i 's/\r\$//' deploy/*.sh && git add -A && git commit" >&2
+  exit 1
+fi
+echo "Line ending skrip: LF (aman untuk Linux)."
+
 step "Selesai"
 ls -lh "$OUT" | awk '{print "Paket   : " $NF " (" $5 ")"}'
 FILES=$(wc -l < "$LIST")
