@@ -23,19 +23,35 @@ step() { printf "\n\033[1;34m==>\033[0m %s\n" "$1"; }
 # Kalau ada perubahan yang belum di-commit, git archive tidak akan menyertakannya.
 # Lebih baik diberitahu sekarang daripada bingung kenapa server memakai versi lama.
 if ! git diff --quiet || ! git diff --cached --quiet; then
-  echo "Peringatan: ada perubahan yang belum di-commit." >&2
-  echo "Paket dibuat dari isi commit terakhir, perubahan tersebut TIDAK ikut." >&2
-  echo "Commit dulu, atau lanjutkan dengan sadar." >&2
-  printf "Lanjutkan? [y/N] "
-  read -r answer
-  [[ "$answer" == "y" || "$answer" == "Y" ]] || exit 1
+  echo "Ada perubahan yang belum di-commit." >&2
+  echo "git archive mengemas isi commit terakhir, jadi perubahan itu TIDAK akan ikut." >&2
+  echo >&2
+  git status --short >&2
+  echo >&2
+  if [[ -t 0 ]]; then
+    printf "Tetap lanjutkan? [y/N] "
+    read -r answer
+    [[ "$answer" == "y" || "$answer" == "Y" ]] || exit 1
+  else
+    # Tanpa terminal, jangan menggantung menunggu jawaban yang tidak akan datang.
+    echo "Commit dulu, atau jalankan ulang dengan ALLOW_DIRTY=1 untuk mengabaikan." >&2
+    [[ "${ALLOW_DIRTY:-0}" == "1" ]] || exit 1
+    echo "ALLOW_DIRTY=1 — dilanjutkan." >&2
+  fi
 fi
 
 step "Mengemas dari commit $(git rev-parse --short HEAD)"
 git archive --format=tar.gz --prefix="$PREFIX" -o "$OUT" HEAD
 
 step "Memeriksa isi paket"
-tar -tzf "$OUT" > /dev/null && echo "Arsip utuh dan bisa dibaca."
+
+# Daftar isi diambil SEKALI ke berkas sementara, lalu diperiksa dari sana.
+# Menyalurkan `tar | grep -q` langsung akan membuat grep keluar lebih awal,
+# tar kena SIGPIPE, dan `set -o pipefail` menganggap seluruh pipeline gagal.
+LIST="$(mktemp)"
+trap 'rm -f "$LIST"' EXIT
+tar -tzf "$OUT" > "$LIST"
+echo "Arsip utuh dan bisa dibaca."
 
 for required in \
   "${PREFIX}package.json" \
@@ -47,14 +63,14 @@ for required in \
   "${PREFIX}deploy/nginx.conf.template" \
   "${PREFIX}src/app/[lang]/page.tsx"
 do
-  if ! tar -tzf "$OUT" | grep -qxF "$required"; then
+  if ! grep -qxF "$required" "$LIST"; then
     echo "Berkas wajib tidak ada di paket: $required" >&2
     exit 1
   fi
 done
 echo "Seluruh berkas wajib ada."
 
-if tar -tzf "$OUT" | grep -qE "(^|/)(node_modules|\.next)/"; then
+if grep -qE "(^|/)(node_modules|\.next)/" "$LIST"; then
   echo "Paket ikut membawa node_modules atau .next — seharusnya tidak." >&2
   exit 1
 fi
@@ -62,7 +78,7 @@ echo "Tidak ada node_modules / .next yang ikut terbawa."
 
 step "Selesai"
 ls -lh "$OUT" | awk '{print "Paket   : " $NF " (" $5 ")"}'
-FILES=$(tar -tzf "$OUT" | wc -l)
+FILES=$(wc -l < "$LIST")
 echo "Berkas  : $FILES"
 echo
 echo "Langkah berikutnya — dari PowerShell:"
