@@ -95,6 +95,24 @@ if command -v free >/dev/null; then
   fi
 fi
 
+# Ekstraksi ke direktori yang belum dibersihkan menyisakan berkas project lain di
+# sini. tsconfig.json sudah dibatasi ke src/ sehingga build tidak lagi terganggu,
+# tapi tetap perlu diberitahukan karena menandakan direktori source tidak bersih.
+STRAY=""
+for entry in "$SRC"/*/; do
+  [[ -d "$entry" ]] || continue
+  case "$(basename "$entry")" in
+    src|public|deploy|node_modules|.next|design-system) ;;
+    *) STRAY="${STRAY} $(basename "$entry")" ;;
+  esac
+done
+if [[ -n "$STRAY" ]]; then
+  warn "Ada direktori tak dikenal di dalam source:${STRAY}"
+  warn "Kemungkinan sisa deploy sebelumnya. Untuk direktori yang benar-benar bersih:"
+  warn "  cd /opt/src && mv adhiteknologi adhiteknologi.before-\$(date +%Y%m%d-%H%M%S)"
+  warn "  tar -xzf adhiteknologi.tar.gz --no-same-owner"
+fi
+
 # --------------------------------------------------------------- 2. cek port
 step "Memeriksa port ${APP_PORT}"
 
