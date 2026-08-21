@@ -1,5 +1,22 @@
 # Design System Master File
 
+> **Catatan — palet di bawah sudah tidak berlaku.**
+>
+> Berkas ini hasil generate awal, saat aksen brand masih hijau. Aksen yang
+> berlaku sekarang adalah **indigo**. Sumber kebenaran untuk warna adalah
+> `src/app/globals.css`, bukan berkas ini.
+>
+> | Peran | Terang | Gelap |
+> |---|---|---|
+> | Brand / CTA | `#4338CA` | `#818CF8` |
+> | Latar | `#F7F9FC` | `#060A12` |
+> | Teks | `#0B1220` | `#F2F6FC` |
+> | Pilar Web | `#1D4ED8` | `#7DD3FC` |
+> | Pilar IoT | `#0E7490` | `#22D3EE` |
+> | Pilar POS | `#C2410C` | `#FBBF24` |
+>
+> Bagian lain (pola halaman, tipografi, efek, motion, anti-pattern) masih relevan.
+
 > **LOGIC:** When building a specific page, first check `design-system/pages/[page-name].md`.
 > If that file exists, its rules **override** this Master file.
 > If not, strictly follow the rules below.

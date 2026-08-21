@@ -142,6 +142,9 @@ menyesuaikan.
 ## Referensi desain
 
 Design system hasil generate ada di
-[`design-system/adhi-teknologi/MASTER.md`](design-system/adhi-teknologi/MASTER.md).
-Palet di berkas itu masih memakai aksen hijau dari hasil generate awal — warna yang
-berlaku sekarang adalah indigo di `globals.css`.
+[`design-system/adhi-teknologi/MASTER.md`](design-system/adhi-teknologi/MASTER.md) —
+berisi pola halaman, tipografi, efek, dan anti-pattern yang dipakai sebagai acuan.
+
+Palet di berkas itu berasal dari generate awal saat aksen masih hijau, dan sudah
+ditandai demikian di bagian atasnya. **Sumber kebenaran untuk warna adalah
+`src/app/globals.css`.**
