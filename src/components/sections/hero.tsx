@@ -19,14 +19,23 @@ const pillars = [
 export function Hero({ dict }: { dict: Dictionary }) {
   const t = dict.hero;
 
+  // Flex column supaya `order` bisa memindahkan canvas ke bawah teks di layar
+  // sempit. Satu canvas saja untuk seluruh halaman — merender dua Canvas
+  // (satu disembunyikan CSS) tetap membuat dua konteks WebGL.
   return (
-    <section className="relative isolate overflow-hidden pt-32 pb-20 sm:pt-40 sm:pb-28">
-      <div className="absolute inset-0 -z-10 grid-backdrop" aria-hidden="true" />
-      <div className="absolute inset-x-0 top-0 -z-10 h-[46rem]">
+    <section
+      id="hero"
+      className="relative isolate flex flex-col overflow-hidden pt-32 pb-16 sm:pt-40 lg:block lg:pb-28"
+    >
+      <div className="absolute inset-0 -z-10 grid-backdrop" data-parallax aria-hidden="true" />
+
+      {/* Mobile: blok tersendiri di bawah teks, tidak menimpa apa pun.
+          Desktop (lg+): kembali menjadi lapisan absolut di belakang konten. */}
+      <div className="order-2 mt-10 h-[19rem] w-full sm:h-[23rem] lg:absolute lg:inset-x-0 lg:top-0 lg:-z-10 lg:order-none lg:mt-0 lg:h-[46rem]">
         <HeroCanvas />
       </div>
 
-      <div className="container-page relative">
+      <div className="container-page relative order-1 lg:order-none">
         <div className="max-w-3xl">
           <Reveal className="inline-flex items-center gap-2.5 rounded-[var(--radius-pill)] border border-line bg-glass px-4 py-2 backdrop-blur-md">
             <span
@@ -38,6 +47,7 @@ export function Hero({ dict }: { dict: Dictionary }) {
 
           <Reveal
             as="h1"
+            data-split
             className="mt-7 text-4xl font-extrabold leading-[1.08] tracking-tight text-balance sm:text-6xl lg:text-[4.25rem]"
           >
             {t.titleStart}

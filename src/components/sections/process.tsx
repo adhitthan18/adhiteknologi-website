@@ -12,8 +12,11 @@ export function Process({ dict }: { dict: Dictionary }) {
         <SectionHeading eyebrow={t.eyebrow} title={t.title} description={t.description} />
 
         <ol className="relative mt-14 flex flex-col gap-4">
+          {/* Garis penghubung tahap. origin-top + scaleY digerakkan animator
+              mengikuti posisi scroll, sehingga terasa "menggambar" ke bawah. */}
           <span
-            className="absolute left-6 top-4 bottom-4 hidden w-px bg-line md:block"
+            data-progress-line
+            className="absolute left-6 top-4 bottom-4 hidden w-px origin-top bg-brand/40 md:block"
             aria-hidden="true"
           />
           {t.steps.map((item, index) => (

@@ -11,7 +11,9 @@ export function Stats({ dict }: { dict: Dictionary }) {
             className="flex flex-col gap-2 border-line py-8 sm:border-r sm:px-6 sm:last:border-r-0 lg:py-10"
           >
             <p className="font-mono text-3xl font-extrabold tracking-tight text-fg sm:text-4xl">
-              {item.value}
+              {/* data-count dibaca animator untuk menghitung naik saat masuk layar.
+                  Angkanya tetap tertulis di HTML, jadi tanpa JavaScript pun terbaca. */}
+              <span data-count={item.value}>{item.value}</span>
               <span className="text-brand">{item.suffix}</span>
             </p>
             <p className="text-sm leading-relaxed text-fg-muted">{item.label}</p>
