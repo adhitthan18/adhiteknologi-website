@@ -117,6 +117,40 @@ if [[ -n "$STRAY" ]]; then
   warn "  tar -xzf adhiteknologi.tar.gz --no-same-owner"
 fi
 
+# Ruang disk. npm ci + build Next.js butuh sekitar 1,5 GB, dan kalau habis di
+# tengah jalan hasilnya galat ENOSPC yang tidak menjelaskan apa-apa — sekaligus
+# meninggalkan node_modules setengah jadi. Lebih baik ditolak sejak awal.
+step "Memeriksa ruang disk"
+AVAIL_KB="$(df -Pk "$SRC" | awk 'NR==2 {print $4}')"
+AVAIL_GB="$(awk -v k="$AVAIL_KB" 'BEGIN { printf "%.1f", k / 1048576 }')"
+echo "Tersedia: ${AVAIL_GB} GB"
+
+if [[ "$AVAIL_KB" -lt 1572864 ]]; then
+  echo >&2
+  echo "Pemakai ruang terbesar:" >&2
+  du -sh "$(dirname "$SRC")"/* "${APP_DIR}"/* /root/.npm 2>/dev/null | sort -h | tail -10 >&2
+  echo >&2
+  die "Ruang tersisa hanya ${AVAIL_GB} GB, sedangkan npm ci + build butuh sekitar 1,5 GB.
+
+Rilis lama menyimpan node_modules dan .next yang tidak lagi dipakai. Membersihkannya
+biasanya membebaskan ratusan MB per rilis, tanpa menghilangkan source-nya:
+
+  rm -rf $(dirname "$SRC")/adhiteknologi.before-*/node_modules \
+         $(dirname "$SRC")/adhiteknologi.before-*/.next
+  npm cache clean --force
+
+Bila masih kurang, hapus rilis arsip yang paling lama seluruhnya:
+  ls -dt $(dirname "$SRC")/adhiteknologi.before-* | tail -n +3 | xargs rm -rf"
+fi
+
+# npm ci yang pernah terhenti meninggalkan node_modules setengah jadi, dan
+# percobaan berikutnya bisa gagal dengan galat yang membingungkan.
+if [[ -d node_modules && ! -f node_modules/.package-lock.json ]]; then
+  warn "node_modules terlihat tidak utuh (sisa pemasangan yang terhenti) — dihapus."
+  rm -rf node_modules
+fi
+
+
 # --------------------------------------------------------------- 2. cek port
 step "Memeriksa port ${APP_PORT}"
 

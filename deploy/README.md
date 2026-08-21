@@ -104,6 +104,29 @@ supaya aplikasi benar-benar dijalankan dengan Node 22 — bukan Node sistem.
 > interpreter. Hapus dulu prosesnya, lalu bootstrap ulang:
 > `pm2 delete adhiteknologi`
 
+### Kalau disk penuh
+
+Tiap deploy menyisakan `adhiteknologi.before-*` di `/opt/src`, dan masing-masing
+menyimpan `node_modules` (± 400 MB) serta `.next`. Setelah beberapa kali deploy,
+ruangnya habis dan `npm ci` berhenti dengan `ENOSPC`.
+
+`bootstrap.sh` memeriksanya lebih dulu dan menolak jalan bila tersisa di bawah 1,5 GB,
+lengkap dengan daftar pemakai ruang terbesar.
+
+Membersihkan tanpa menghilangkan source rilis lama:
+
+```bash
+rm -rf /opt/src/adhiteknologi.before-*/node_modules /opt/src/adhiteknologi.before-*/.next
+npm cache clean --force
+df -h /
+```
+
+Menyisakan dua arsip terbaru saja:
+
+```bash
+ls -dt /opt/src/adhiteknologi.before-* | tail -n +3 | xargs rm -rf
+```
+
 ### Kalau port 3000 sudah dipakai
 
 Server ini juga menjalankan situs lain. `bootstrap.sh` memeriksanya lebih dulu dan
