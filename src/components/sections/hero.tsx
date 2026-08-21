@@ -31,7 +31,10 @@ export function Hero({ dict }: { dict: Dictionary }) {
 
       {/* Mobile: blok tersendiri di bawah teks, tidak menimpa apa pun.
           Desktop (lg+): kembali menjadi lapisan absolut di belakang konten. */}
-      <div className="order-2 mt-10 h-[19rem] w-full sm:h-[23rem] lg:absolute lg:inset-x-0 lg:top-0 lg:-z-10 lg:order-none lg:mt-0 lg:h-[46rem]">
+      {/* `relative` wajib: isi HeroCanvas adalah `absolute inset-0`, dan tanpa
+          leluhur ber-posisi di sini ia akan berpatokan ke <section> lalu menutupi
+          seluruh hero — persis bug yang terjadi di layar sempit. */}
+      <div className="relative order-2 mt-10 h-[19rem] w-full sm:h-[23rem] lg:absolute lg:inset-x-0 lg:top-0 lg:-z-10 lg:order-none lg:mt-0 lg:h-[46rem]">
         <HeroCanvas />
       </div>
 
