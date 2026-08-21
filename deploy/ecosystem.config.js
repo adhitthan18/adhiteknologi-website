@@ -39,6 +39,15 @@ module.exports = {
         HOSTNAME: "127.0.0.1",
       },
 
+      // `pm2 start --env production` mencari kunci env_production dan
+      // memperingatkan bila tidak ada. Isinya sama; ini hanya menghilangkan
+      // peringatan sekaligus membuat maksudnya eksplisit.
+      env_production: {
+        NODE_ENV: "production",
+        PORT: port,
+        HOSTNAME: "127.0.0.1",
+      },
+
       max_memory_restart: "400M",
       autorestart: true,
       // Cegah restart-loop tak berujung kalau aplikasinya memang gagal start.

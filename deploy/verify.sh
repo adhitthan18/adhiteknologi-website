@@ -148,7 +148,18 @@ if [[ "$PUBLIC_CHECK" == "1" ]]; then
   head2 "Akses publik (https://${SERVER_NAME})"
   PUB="$(code_of "https://${SERVER_NAME}/id")"
   case "$PUB" in
-    200) ok "https://${SERVER_NAME}/id merespons 200." ;;
+    200)
+      # Status 200 saja belum membuktikan apa pun: bila vhost lain yang menangkap
+      # domain ini, jawabannya tetap 200 tapi isinya situs yang berbeda.
+      PUB_HTML="$(curl -s --max-time 10 "https://${SERVER_NAME}/id" 2>/dev/null)"
+      if grep -q 'iotadhiteknologi@gmail.com' <<<"$PUB_HTML"; then
+        ok "https://${SERVER_NAME}/id melayani aplikasi ini."
+      else
+        bad "https://${SERVER_NAME}/id merespons 200 tapi ISINYA BUKAN aplikasi ini."
+        echo "     Kemungkinan vhost lain masih mengklaim domain ini. Periksa:" >&2
+        echo "     nginx -T | grep -n \"server_name.*${SERVER_NAME}\"" >&2
+      fi
+      ;;
     000) note "Tidak bisa dijangkau — DNS/TLS mungkin belum siap. Ini wajar sebelum domain diarahkan." ;;
     526|525) note "Cloudflare ${PUB}: sertifikat origin belum cocok dengan mode SSL 'Full (strict)'." ;;
     502) bad "502 Bad Gateway — Nginx tidak bisa menghubungi aplikasi." ;;
