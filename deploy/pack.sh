@@ -61,7 +61,8 @@ for required in \
   "${PREFIX}deploy/bootstrap.sh" \
   "${PREFIX}deploy/verify.sh" \
   "${PREFIX}deploy/ecosystem.config.js" \
-  "${PREFIX}deploy/nginx.conf.template" \
+  "${PREFIX}deploy/nginx-http.conf.template" \
+  "${PREFIX}deploy/nginx-tls.conf.template" \
   "${PREFIX}src/app/[lang]/page.tsx"
 do
   if ! grep -qxF "$required" "$LIST"; then
