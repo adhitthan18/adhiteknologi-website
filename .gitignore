@@ -41,6 +41,6 @@ yarn-error.log*
 next-env.d.ts
 
 # deploy
-deploy/deploy.env
 .deploy-stage/
+adhiteknologi.tar.gz
 adhiteknologi-*.tar.gz
