@@ -8,7 +8,7 @@ export const en: Dictionary = {
   meta: {
     tagline: "A software house for web, IoT, and point-of-sale systems",
     description:
-      "Adhi Teknologi builds websites, IoT hardware and platforms, and POS systems for businesses in Indonesia. Planning through maintenance, handled by one team.",
+      "PT Adhi Teknologi Indonesia builds websites, IoT hardware and platforms, and POS systems for businesses in Indonesia. Planning through maintenance, handled by one team.",
     keywords: [
       "web development agency",
       "software house Indonesia",
@@ -54,7 +54,7 @@ export const en: Dictionary = {
     titleHighlight: "IoT",
     titleEnd: ", and point-of-sale — built by one team.",
     subtitle:
-      "Adhi Teknologi builds websites, IoT hardware and platforms, and POS systems for businesses across Indonesia. From planning and development through to support after launch.",
+      "PT Adhi Teknologi Indonesia builds websites, IoT hardware and platforms, and POS systems for businesses across Indonesia. From planning and development through to support after launch.",
     ctaPrimary: "Start your project",
     ctaSecondary: "See our products",
     pillars: { web: "Websites & Web Apps", iot: "IoT Solutions", pos: "POS Systems" },
@@ -291,7 +291,7 @@ export const en: Dictionary = {
     submitEmail: "Send via email",
     privacy:
       "The fields above are only assembled into a message on your own device — nothing is sent to or stored on this site's server.",
-    messageIntro: "Hello Adhi Teknologi, I would like a consultation.",
+    messageIntro: "Hello PT Adhi Teknologi Indonesia, I would like a consultation.",
     messageName: "Name/Company",
     messageContact: "Contact",
     messageNeed: "Need",

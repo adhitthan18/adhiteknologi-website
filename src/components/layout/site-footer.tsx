@@ -21,8 +21,21 @@ export function SiteFooter({ dict, locale }: { dict: Dictionary; locale: Locale 
     <footer className="border-t border-line bg-surface/60">
       <div className="container-page grid gap-12 py-16 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
         <div className="max-w-sm">
-          <Logo />
-          <p className="mt-5 text-sm leading-relaxed text-fg-muted">{dict.meta.description}</p>
+          <Logo full />
+
+          {/* Moto dari lockup logo resmi. Bilah emas meniru bilah pada marka —
+              emas dipakai sebagai elemen dekoratif, bukan sebagai warna teks,
+              karena kontrasnya di latar terang hanya 1,8:1. */}
+          <p className="mt-5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-fg-muted">
+            {site.motto.map((word, i) => (
+              <span key={word} className="inline-flex items-center gap-2">
+                {i > 0 && <span className="h-1 w-1 rounded-full bg-gold" aria-hidden />}
+                {word}
+              </span>
+            ))}
+          </p>
+
+          <p className="mt-4 text-sm leading-relaxed text-fg-muted">{dict.meta.description}</p>
           <div className="mt-6 flex gap-2">
             {socials.map(({ href, label, Icon }) => (
               <a

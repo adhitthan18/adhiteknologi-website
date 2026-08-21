@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 190" role="img" aria-label="Lockup ATI — primer">
+  <title>Lockup ATI — primer</title>
+  <!-- Blok nama dijustifikasi: tepi kiri x=212, lebar 333px lewat textLength,
+       jadi keempat baris rata di kanan maupun kiri. -->
+  <defs>
+    <linearGradient id="pl" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0a1f44"/><stop offset="100%" stop-color="#15366f"/></linearGradient>
+    <linearGradient id="pr" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2f7ad1"/><stop offset="100%" stop-color="#1b4f9c"/></linearGradient>
+    <linearGradient id="gd" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ffe375"/><stop offset="100%" stop-color="#f5b301"/></linearGradient>
+  </defs>
+  <g transform="translate(0, 18)">
+    <path d="M70 14 L44 118 L14 118 L56 14 Z" fill="url(#pl)"/>
+    <path d="M84 14 L126 118 L94 118 L64 40 Z" fill="url(#pr)"/>
+    <path d="M34 82 L118 66 L114 90 L30 106 Z" fill="url(#gd)"/>
+    <path d="M70 14 L62 46 L56 46 L64 14 Z" fill="#ffffff" fill-opacity="0.16"/>
+  </g>
+  <rect x="176" y="30" width="4" height="130" fill="#1b4f9c" fill-opacity="0.35"/>
+  <text x="212" y="66"  font-family="ui-sans-serif, system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="56" font-weight="800" textLength="333" lengthAdjust="spacing" fill="#1b4f9c">PT ADHI</text>
+  <text x="212" y="122" font-family="ui-sans-serif, system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="56" font-weight="800" textLength="333" lengthAdjust="spacing" fill="#0a1f44">TEKNOLOGI</text>
+  <text x="212" y="156" font-family="ui-sans-serif, system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="30" font-weight="700" textLength="333" lengthAdjust="spacing" fill="#0a1f44">INDONESIA</text>
+  <text x="212" y="180" font-family="ui-sans-serif, system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" textLength="333" lengthAdjust="spacing" fill="#1b4f9c">TEKNOLOGI • INOVASI • INTEGRASI • SOLUSI</text>
+</svg>

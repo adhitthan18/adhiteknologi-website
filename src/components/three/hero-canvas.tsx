@@ -7,18 +7,20 @@ import { NetworkSphere } from "./network-sphere";
 import { useIsHydrated, usePrefersReducedMotion } from "@/lib/use-client-env";
 
 const PALETTES = {
+  // Warna diambil dari marka: biru korporat untuk simpul, emas sebagai aksen
+  // sesekali — meniru bilah emas yang memotong huruf A.
   light: {
-    node: "#4338ca",
-    nodeAlt: "#0e7490",
-    line: "#4f46e5",
-    shell: "#0e7490",
+    node: "#1b4f9c",
+    nodeAlt: "#f5b301",
+    line: "#2f7ad1",
+    shell: "#2f7ad1",
     lineOpacity: 0.26,
   },
   dark: {
-    node: "#818cf8",
-    nodeAlt: "#22d3ee",
-    line: "#6366f1",
-    shell: "#22d3ee",
+    node: "#8fb6ec",
+    nodeAlt: "#ffd500",
+    line: "#6f9fdd",
+    shell: "#8fb6ec",
     lineOpacity: 0.24,
   },
 } as const;

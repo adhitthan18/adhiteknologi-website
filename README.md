@@ -95,10 +95,29 @@ Kalau nanti ingin dikirim lewat server (Resend, SMTP, atau Formspree), ganti isi
 `handleSubmit` di `src/components/sections/contact.tsx` dengan `fetch("/api/contact")`
 dan buat route handler-nya di `src/app/api/contact/route.ts`.
 
-## Warna & tema
+## Merek & warna
 
-Aksen utama **indigo** (`#4338CA` terang / `#818CF8` gelap), dengan tiga warna pilar:
-biru untuk web, cyan untuk IoT, oranye untuk POS.
+Situs ini memakai identitas resmi **PT Adhi Teknologi Indonesia** dari brand kit
+(`brand-ati/`). Palet diambil langsung dari sana:
+
+| Peran | Terang | Gelap |
+|---|---|---|
+| Biru korporat (brand) | `#1B4F9C` | `#8FB6EC` |
+| Navy | `#0A1F44` | `#DBE8F7` |
+| Emas aksen | `#F5B301` | `#FFD500` |
+
+Marka logo ada di [`src/components/layout/logo.tsx`](src/components/layout/logo.tsx).
+**Geometri path-nya disalin persis dari brand kit** — jangan diubah di sini. Kalau
+bentuk marka direvisi, ubah di brand kit lalu salin ulang, sesuai catatan di README
+brand.
+
+Yang berbeda dari berkas asli hanya sumber warnanya: gradien mengambil nilai dari CSS
+variable (`--mark-left-from` dan seterusnya), sehingga satu komponen melayani versi
+primer (latar terang) dan reverse (latar gelap) tanpa dua berkas terpisah.
+
+> **Emas hanya untuk elemen dekoratif di latar terang.** Kontrasnya di sana cuma
+> 1,8:1 — jauh di bawah ambang teks. Di latar gelap emas terbaca (10,7:1) dan boleh
+> dipakai untuk teks.
 
 Token didefinisikan dua kali di `globals.css`: `:root` untuk terang dan `.dark` untuk
 gelap. Komponen tidak pernah memakai hex langsung, selalu lewat token (`text-fg-muted`,
@@ -106,6 +125,15 @@ gelap. Komponen tidak pernah memakai hex langsung, selalu lewat token (`text-fg-
 
 Kontras teks diperiksa di kedua tema dan seluruhnya memenuhi WCAG AA (≥ 4.5:1 untuk
 teks normal).
+
+### Aset merek di dalam project
+
+| Berkas | Dari | Untuk |
+|---|---|---|
+| `src/app/icon.svg` | `logo/ati-favicon.svg` | Favicon |
+| `public/brand/ati-marka-*.svg` | brand kit | Rujukan marka |
+| `public/brand/ati-lockup-*.svg` | brand kit | Logo penuh, dipakai di JSON-LD |
+| `public/brand/og-korporat.png` | `png/banner-korporat-1600x1000.png` | Gambar Open Graph |
 
 ## Aksesibilitas & motion
 

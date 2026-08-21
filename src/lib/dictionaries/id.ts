@@ -6,7 +6,7 @@ export const id = {
   meta: {
     tagline: "Software house untuk web, IoT, dan sistem kasir",
     description:
-      "Adhi Teknologi membangun website, perangkat & platform IoT, serta sistem POS untuk bisnis di Indonesia. Dari perencanaan sampai maintenance, dikerjakan satu tim.",
+      "PT Adhi Teknologi Indonesia membangun website, perangkat & platform IoT, serta sistem POS untuk bisnis di Indonesia. Dari perencanaan sampai maintenance, dikerjakan satu tim.",
     keywords: [
       "jasa pembuatan website",
       "software house Indonesia",
@@ -52,7 +52,7 @@ export const id = {
     titleHighlight: "IoT",
     titleEnd: ", dan sistem kasir — dibangun oleh satu tim.",
     subtitle:
-      "Adhi Teknologi mengerjakan pembuatan website, perangkat serta platform IoT, dan sistem POS untuk usaha di Indonesia. Dari perencanaan, pengembangan, sampai perawatan setelah rilis.",
+      "PT Adhi Teknologi Indonesia mengerjakan pembuatan website, perangkat serta platform IoT, dan sistem POS untuk usaha di Indonesia. Dari perencanaan, pengembangan, sampai perawatan setelah rilis.",
     ctaPrimary: "Mulai project Anda",
     ctaSecondary: "Lihat produk kami",
     pillars: { web: "Website & Web App", iot: "Solusi IoT", pos: "Sistem POS" },
@@ -289,7 +289,7 @@ export const id = {
     submitEmail: "Kirim lewat email",
     privacy:
       "Isian di atas hanya disusun menjadi pesan di perangkat Anda — tidak dikirim atau disimpan di server situs ini.",
-    messageIntro: "Halo Adhi Teknologi, saya ingin konsultasi.",
+    messageIntro: "Halo PT Adhi Teknologi Indonesia, saya ingin konsultasi.",
     messageName: "Nama/Perusahaan",
     messageContact: "Kontak",
     messageNeed: "Kebutuhan",

@@ -3,8 +3,12 @@
  * ada di `src/lib/dictionaries/{id,en}.ts`.
  */
 export const site = {
+  // Nama pendek untuk header dan tempat sempit lainnya.
   name: "Adhi Teknologi",
-  legalName: "Adhi Teknologi",
+  // Nama resmi, mengikuti penulisan di brand kit (tanpa titik setelah PT).
+  legalName: "PT Adhi Teknologi Indonesia",
+  // Moto dari lockup logo resmi.
+  motto: ["Teknologi", "Inovasi", "Integrasi", "Solusi"],
   domain: "adhiteknologi.com",
   url: "https://adhiteknologi.com",
   email: "iotadhiteknologi@gmail.com",
@@ -18,6 +22,8 @@ export const site = {
     linkedin: "https://linkedin.com/company/adhiteknologi",
     github: "https://github.com/adhiteknologi",
   },
+  // Aset dari brand kit, disalin ke public/brand/
+  ogImage: "/brand/og-korporat.png",
 } as const;
 
 export type Pillar = "web" | "iot" | "pos";

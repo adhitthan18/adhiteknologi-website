@@ -26,26 +26,38 @@
   --border: #e3e9f2;
   --border-strong: #cdd7e6;
 
-  /* Brand */
-  --brand: #4338ca; /* indigo — aksen utama, 7,5:1 di atas --bg */
-  --brand-vivid: #4f46e5;
+  /* Brand — dari brand kit PT Adhi Teknologi Indonesia */
+  --brand: #1b4f9c; /* biru korporat, 7,5:1 di atas --bg */
+  --brand-vivid: #2f7ad1;
+  --brand-deep: #0a1f44; /* navy, warna kaki kiri marka */
   --brand-fg: #ffffff;
-  --brand-soft: rgba(67, 56, 202, 0.1);
+  --brand-soft: rgba(27, 79, 156, 0.1);
+
+  /* Emas aksen dari bilah marka. Kontrasnya di latar terang hanya 1,8:1,
+     jadi HANYA untuk elemen dekoratif — tidak pernah untuk teks. */
+  --gold: #f5b301;
+  --gold-soft: rgba(245, 179, 1, 0.14);
+
+  /* Gradien marka logo, mengikuti ati-marka-primer.svg */
+  --mark-left-from: #0a1f44;
+  --mark-left-to: #15366f;
+  --mark-right-from: #2f7ad1;
+  --mark-right-to: #1b4f9c;
 
   /* Pilar layanan */
-  --web: #1d4ed8;
-  --web-soft: rgba(29, 78, 216, 0.1);
+  --web: #1b4f9c;
+  --web-soft: rgba(27, 79, 156, 0.1);
   --iot: #0e7490;
   --iot-soft: rgba(14, 116, 144, 0.1);
-  --pos: #c2410c;
-  --pos-soft: rgba(194, 65, 12, 0.1);
+  --pos: #a16207;
+  --pos-soft: rgba(161, 98, 7, 0.12);
 
   /* Status */
   --success: #15803d;
   --warning: #b45309;
   --danger: #b91c1c;
 
-  --ring: #4338ca;
+  --ring: #1b4f9c;
   --shadow-color: 218 42% 18%;
 
   color-scheme: light;
@@ -66,13 +78,24 @@
   --border: #1d2a42;
   --border-strong: #2c3d5c;
 
-  --brand: #818cf8;
-  --brand-vivid: #a5b4fc;
-  --brand-fg: #0b1020;
-  --brand-soft: rgba(129, 140, 248, 0.16);
+  --brand: #8fb6ec; /* biru marka versi reverse, 9,5:1 di atas --bg */
+  --brand-vivid: #b3cef4;
+  --brand-deep: #dbe8f7;
+  --brand-fg: #0a1f44;
+  --brand-soft: rgba(143, 182, 236, 0.16);
 
-  --web: #7dd3fc;
-  --web-soft: rgba(125, 211, 252, 0.14);
+  /* Di latar gelap emas justru terbaca (10,7:1), jadi boleh dipakai untuk teks. */
+  --gold: #ffd500;
+  --gold-soft: rgba(255, 213, 0, 0.16);
+
+  /* Marka versi reverse: kaki kiri putih, kaki kanan biru muda. */
+  --mark-left-from: #ffffff;
+  --mark-left-to: #e6edf9;
+  --mark-right-from: #8fb6ec;
+  --mark-right-to: #6f9fdd;
+
+  --web: #8fb6ec;
+  --web-soft: rgba(143, 182, 236, 0.14);
   --iot: #22d3ee;
   --iot-soft: rgba(34, 211, 238, 0.14);
   --pos: #fbbf24;
@@ -82,7 +105,7 @@
   --warning: #fbbf24;
   --danger: #f87171;
 
-  --ring: #a5b4fc;
+  --ring: #b3cef4;
   --shadow-color: 220 60% 2%;
 
   color-scheme: dark;
@@ -106,6 +129,9 @@
   --color-brand-vivid: var(--brand-vivid);
   --color-brand-fg: var(--brand-fg);
   --color-brand-soft: var(--brand-soft);
+  --color-brand-deep: var(--brand-deep);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
 
   --color-web: var(--web);
   --color-web-soft: var(--web-soft);
@@ -192,7 +218,8 @@ body {
 }
 
 @utility text-gradient {
-  background: linear-gradient(120deg, var(--fg) 20%, var(--brand-vivid) 60%, var(--iot) 100%);
+  /* Berhenti di --brand, bukan emas: emas hanya 1,8:1 di latar terang. */
+  background: linear-gradient(120deg, var(--fg) 20%, var(--brand-vivid) 55%, var(--brand) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
