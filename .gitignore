@@ -44,3 +44,8 @@ next-env.d.ts
 .deploy-stage/
 adhiteknologi.tar.gz
 adhiteknologi-*.tar.gz
+
+# Project terpisah: API Go + dashboard untuk app./admin.adhiteknologi.com.
+# Sengaja tidak ikut repository ini — kalau ter-commit, seluruh 15 MB-nya akan
+# ikut ke dalam setiap paket deploy company profile.
+dashboard/
