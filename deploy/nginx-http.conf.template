@@ -1,0 +1,87 @@
+# Template Nginx untuk __SERVER_NAME__ — origin HTTP saja.
+#
+# Dipakai bila TLS diterminasi di depan (Cloudflare, load balancer, atau CDN lain)
+# dan origin cukup melayani HTTP di port 80. Ini pola yang sudah dipakai vhost lain
+# di server ini, jadi tidak ada sertifikat yang perlu diurus di sisi origin.
+#
+# Di Cloudflare, pasangannya adalah mode SSL/TLS "Flexible". Bila ingin trafik
+# Cloudflare→origin ikut terenkripsi, pakai deploy/nginx-tls.conf.template dengan
+# TLS_MODE=origin dan mode "Full (strict)".
+#
+# JANGAN disalin manual. deploy/bootstrap.sh yang merender berkas ini ke
+# /etc/nginx/sites-available/__SERVER_NAME__ sambil mengisi __APP_PORT__,
+# sehingga port di Nginx dijamin sama dengan port aplikasi.
+
+upstream adhiteknologi_app {
+    server 127.0.0.1:__APP_PORT__;
+    keepalive 32;
+}
+
+# www -> non-www, supaya hanya ada satu URL kanonik seperti tag canonical di <head>
+server {
+    listen 80;
+    listen [::]:80;
+    server_name www.__SERVER_NAME__;
+
+    return 301 http://__SERVER_NAME__$request_uri;
+}
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name __SERVER_NAME__;
+
+    # --- Header keamanan ---
+    # HSTS sengaja TIDAK dipasang di sini: origin melayani HTTP, dan header itu
+    # urusan lapisan yang benar-benar menghadap pengunjung (Cloudflare).
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
+
+    # --- Kompresi ---
+    # `compress: false` di next.config.ts sengaja mematikan gzip Next.js supaya
+    # tidak dikerjakan dua kali; Nginx yang menanganinya di sini.
+    gzip              on;
+    gzip_vary         on;
+    gzip_proxied      any;
+    gzip_comp_level   6;
+    gzip_min_length   1024;
+    gzip_types        text/plain text/css application/javascript application/json
+                      image/svg+xml application/manifest+json;
+
+    client_max_body_size 4m;
+
+    # --- Aset ber-hash: aman di-cache selamanya ---
+    # Font next/font juga berada di /_next/static/media/, jadi ikut tercakup di sini.
+    location /_next/static/ {
+        proxy_pass http://adhiteknologi_app;
+        proxy_http_version 1.1;
+        proxy_set_header Connection "";
+        proxy_set_header Host $host;
+        add_header Cache-Control "public, max-age=31536000, immutable";
+        access_log off;
+    }
+
+    # --- Semua permintaan lain ---
+    location / {
+        proxy_pass http://adhiteknologi_app;
+        proxy_http_version 1.1;
+
+        proxy_set_header Host              $host;
+        proxy_set_header X-Real-IP         $remote_addr;
+        # Di belakang Cloudflare, $remote_addr adalah IP Cloudflare. IP pengunjung
+        # yang sebenarnya ada di CF-Connecting-IP.
+        proxy_set_header CF-Connecting-IP  $http_cf_connecting_ip;
+        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+        # Cloudflare mengirim X-Forwarded-Proto=https saat pengunjung memakai HTTPS,
+        # sehingga aplikasi tetap tahu skema aslinya meski origin dilayani via HTTP.
+        proxy_set_header X-Forwarded-Proto $http_x_forwarded_proto;
+        proxy_set_header X-Forwarded-Host  $host;
+        proxy_set_header Upgrade           $http_upgrade;
+        proxy_set_header Connection        "upgrade";
+
+        proxy_read_timeout 60s;
+        proxy_buffering    on;
+    }
+}

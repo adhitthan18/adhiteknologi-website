@@ -146,6 +146,7 @@ Aman dijalankan berulang kali.
 | `APP_DIR` | `/opt/adhiteknologi` | Direktori runtime (terpisah dari `/opt/src`) |
 | `PM2_APP` | `adhiteknologi` | Nama proses PM2 |
 | `SERVER_NAME` | `adhiteknologi.com` | Domain untuk konfigurasi Nginx |
+| `TLS_MODE` | `none` | `none` (HTTP saja), `origin`, atau `letsencrypt` |
 | `SETUP_NGINX` | `1` | `0` untuk melewati bagian Nginx |
 | `FORCE_NGINX` | `0` | `1` untuk menimpa konfigurasi Nginx yang ada |
 
@@ -167,33 +168,66 @@ Lewati pengecekan publik dengan `PUBLIC_CHECK=0` bila DNS belum diarahkan.
 
 ## TLS
 
-Pilih salah satu — keduanya sudah disiapkan di `nginx.conf.template`.
+`bootstrap.sh` punya tiga mode lewat `TLS_MODE`, default **`none`**.
 
-**A. Domain diproksikan Cloudflare (awan oranye)** — paling praktis:
+### `TLS_MODE=none` (default)
+
+Origin melayani HTTP di port 80 saja, TLS diterminasi di depan oleh Cloudflare.
+Tidak ada sertifikat yang perlu diurus di server. Ini pola yang dipakai vhost lain
+di server ini, dan pasangannya di Cloudflare adalah mode SSL/TLS **Flexible**.
+
+Template: `nginx-http.conf.template`.
+
+### `TLS_MODE=origin`
+
+Trafik Cloudflare→origin ikut terenkripsi memakai Cloudflare Origin Certificate.
 
 1. Dashboard Cloudflare → SSL/TLS → Origin Server → Create Certificate
 2. Simpan di server sebagai `/etc/ssl/cloudflare/adhiteknologi.pem` dan `.key`
-3. Di `/etc/nginx/sites-available/adhiteknologi.com`, aktifkan dua baris
-   `ssl_certificate` versi Cloudflare dan nonaktifkan yang Let's Encrypt
+   (`chmod 600` untuk kuncinya)
+3. Di konfigurasi yang dirender, aktifkan dua baris `ssl_certificate` versi
+   Cloudflare dan nonaktifkan yang Let's Encrypt
 4. Set mode SSL/TLS ke **Full (strict)**
-5. `nginx -t && systemctl reload nginx`
 
 Sertifikat origin berlaku 15 tahun, tidak perlu perpanjangan berkala.
 
-**B. Domain langsung ke server (awan abu-abu)**:
+### `TLS_MODE=letsencrypt`
+
+Sertifikat diterbitkan di server ini:
 
 ```bash
 certbot --nginx -d adhiteknologi.com -d www.adhiteknologi.com
 ```
 
-Arahkan DNS lebih dulu (A record `@` dan `www` ke IP server), karena verifikasinya
-lewat HTTP.
+Arahkan DNS lebih dulu, karena verifikasinya lewat HTTP.
 
-Pada pemasangan pertama, `nginx -t` di dalam `bootstrap.sh` akan gagal karena
-sertifikatnya memang belum ada. Itu dilaporkan sebagai catatan, bukan error — terbitkan
-sertifikatnya, lalu `nginx -t && systemctl reload nginx`.
+> Pada pemasangan pertama dengan `origin` atau `letsencrypt`, `nginx -t` di dalam
+> `bootstrap.sh` akan gagal karena sertifikatnya memang belum ada. Itu dilaporkan
+> sebagai catatan, bukan error — terbitkan sertifikatnya, lalu
+> `nginx -t && systemctl reload nginx`.
 
----
+### Kompatibilitas versi Nginx
+
+Template TLS ditulis dengan sintaks Nginx 1.25.1+ (`listen 443 ssl;` + `http2 on;`).
+Bila Nginx di server lebih lama — Ubuntu 24.04 membawa 1.24 — `bootstrap.sh`
+menurunkannya otomatis ke `listen 443 ssl http2;`. Tanpa itu, `nginx -t` gagal
+dengan `unknown directive "http2"` dan **seluruh** konfigurasi Nginx tidak dimuat,
+sehingga domain jatuh ke vhost lain yang kebetulan berada di urutan pertama.
+
+## Kalau domain menampilkan situs lain
+
+Nginx melayani server block pertama yang cocok. Bila tidak ada `server_name` yang
+cocok — atau konfigurasi kita gagal dimuat — permintaan jatuh ke vhost lain.
+
+```bash
+nginx -t                                   # gagal? konfigurasi kita tidak aktif
+ls -l /etc/nginx/sites-enabled/            # adakah vhost lain mengklaim domain ini?
+nginx -T | grep -n "server_name"           # siapa saja yang terdaftar
+```
+
+Bila ada vhost lama yang juga mengklaim domain ini, keluarkan domainnya dari
+`server_name` vhost tersebut, jangan menonaktifkan seluruh berkasnya — subdomain
+lain di dalamnya mungkin masih dipakai.
 
 ## Rollback
 

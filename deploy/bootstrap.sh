@@ -31,6 +31,10 @@ PM2_APP="${PM2_APP:-adhiteknologi}"
 SERVER_NAME="${SERVER_NAME:-adhiteknologi.com}"
 SETUP_NGINX="${SETUP_NGINX:-1}"
 FORCE_NGINX="${FORCE_NGINX:-0}"
+# none        : origin melayani HTTP saja, TLS diterminasi Cloudflare
+# origin      : origin ikut TLS memakai Cloudflare Origin Certificate
+# letsencrypt : sertifikat diterbitkan certbot di server ini
+TLS_MODE="${TLS_MODE:-none}"
 LOG_DIR="/var/log/adhiteknologi"
 
 step() { printf "\n\033[1;34m==>\033[0m %s\n" "$1"; }
@@ -210,9 +214,16 @@ if [[ "$SETUP_NGINX" == "1" ]] && command -v nginx >/dev/null; then
       warn "PERHATIAN: konfigurasi itu tidak menunjuk ke port ${APP_PORT}. Nginx akan 502."
     fi
   else
+    case "$TLS_MODE" in
+      none)               TEMPLATE="deploy/nginx-http.conf.template" ;;
+      origin|letsencrypt) TEMPLATE="deploy/nginx-tls.conf.template" ;;
+      *) die "TLS_MODE tidak dikenal: ${TLS_MODE} (pilih none, origin, atau letsencrypt)" ;;
+    esac
+    echo "TLS_MODE=${TLS_MODE} - memakai $(basename "$TEMPLATE")"
+
     sed -e "s/__APP_PORT__/${APP_PORT}/g" \
         -e "s/__SERVER_NAME__/${SERVER_NAME}/g" \
-        deploy/nginx.conf.template > "$AVAILABLE"
+        "$TEMPLATE" > "$AVAILABLE"
 
     # Direktif `http2 on;` baru ada sejak Nginx 1.25.1. Di versi sebelumnya —
     # termasuk 1.24 bawaan Ubuntu 24.04 — HTTP/2 diaktifkan lewat parameter
