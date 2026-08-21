@@ -17,6 +17,7 @@ cd "$ROOT"
 OUT_DIR="${1:-$ROOT}"
 OUT="${OUT_DIR%/}/adhiteknologi.tar.gz"
 PREFIX="adhiteknologi/"
+CR=$'\r'
 
 step() { printf "\n\033[1;34m==>\033[0m %s\n" "$1"; }
 
@@ -76,29 +77,38 @@ if grep -qE "(^|/)(node_modules|\.next)/" "$LIST"; then
 fi
 echo "Tidak ada node_modules / .next yang ikut terbawa."
 
-# Skrip dieksekusi di Linux. Satu carriage return saja di baris shebang membuat
-# kernel mencari interpreter bernama "bash" dan skrip gagal sebelum jalan.
-# .gitattributes sudah memaksa LF, pemeriksaan ini memastikannya benar terjadi.
-CRLF_FILES=""
-while IFS= read -r entry; do
-  case "$entry" in
-    *.sh|*.template|*.conf)
-      CR_COUNT="$(tar -xzOf "$OUT" "$entry" | tr -dc "" | wc -c)"
-      [[ "$CR_COUNT" -gt 0 ]] && CRLF_FILES="${CRLF_FILES}
-  ${entry} (${CR_COUNT} CR)"
-      ;;
-  esac
-done < "$LIST"
+step "Memeriksa line ending"
 
-if [[ -n "$CRLF_FILES" ]]; then
-  echo "Berkas berikut memakai CRLF dan akan gagal jalan di Linux:" >&2
-  printf "%b
-" "$CRLF_FILES" >&2
+# Skrip dieksekusi di Linux. Satu carriage return di baris shebang saja sudah
+# membuat kernel mencari interpreter bernama bash-CR, dan skrip gagal sebelum
+# sempat jalan:  /usr/bin/env: 'bash^M': No such file or directory
+# .gitattributes sudah memaksa LF; pemeriksaan ini memastikannya benar terjadi.
+#
+# Daftar dikumpulkan lebih dulu lalu di-loop dengan `for`. Pola `while read`
+# dengan redirect dari $LIST rawan terhenti di tengah karena perintah di dalam
+# badan loop ikut mewarisi stdin yang sama.
+SCRIPT_ENTRIES="$(grep -E '\.(sh|conf|template|service)$' "$LIST" || true)"
+BAD_EOL=0
+CHECKED=0
+
+for entry in $SCRIPT_ENTRIES; do
+  CHECKED=$((CHECKED + 1))
+  CR_COUNT="$(tar -xzOf "$OUT" "$entry" | tr -cd "$CR" | wc -c | tr -d ' ')"
+  if [[ "$CR_COUNT" -gt 0 ]]; then
+    echo "  CRLF terdeteksi: ${entry} (${CR_COUNT} CR)" >&2
+    BAD_EOL=1
+  fi
+done
+
+if [[ "$BAD_EOL" -eq 1 ]]; then
   echo >&2
-  echo "Perbaiki dengan: sed -i 's/\r\$//' deploy/*.sh && git add -A && git commit" >&2
+  echo "Berkas di atas memakai CRLF dan akan gagal dieksekusi di Linux." >&2
+  echo "Perbaiki dengan:" >&2
+  echo "  sed -i 's/\\r\$//' deploy/*.sh deploy/*.template" >&2
+  echo "  git add -A && git commit -m 'fix: line ending LF'" >&2
   exit 1
 fi
-echo "Line ending skrip: LF (aman untuk Linux)."
+echo "LF bersih di ${CHECKED} berkas skrip/konfigurasi."
 
 step "Selesai"
 ls -lh "$OUT" | awk '{print "Paket   : " $NF " (" $5 ")"}'
