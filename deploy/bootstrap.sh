@@ -120,21 +120,41 @@ fi
 # --------------------------------------------------------------- 2. cek port
 step "Memeriksa port ${APP_PORT}"
 
-port_owner() {
-  if command -v ss >/dev/null; then
-    ss -ltnpH "sport = :${APP_PORT}" 2>/dev/null | head -1
-  fi
-}
+# Pemilik port diidentifikasi lewat PID, bukan nama proses. Next.js menamai
+# prosesnya "next-server", bukan "node", sehingga pencocokan berdasarkan nama
+# akan salah mengira aplikasi sendiri sebagai proses asing.
+PORT_PID=""
+if command -v ss >/dev/null; then
+  PORT_PID="$(ss -ltnpH "sport = :${APP_PORT}" 2>/dev/null | grep -oE 'pid=[0-9]+' | head -1 | cut -d= -f2)"
+fi
 
-OWNER="$(port_owner || true)"
-if [[ -n "$OWNER" ]]; then
-  # Kalau yang memakai adalah proses PM2 kita sendiri, itu wajar (deploy ulang).
-  if pm2 describe "$PM2_APP" >/dev/null 2>&1 && grep -q "node" <<<"$OWNER"; then
-    echo "Port dipakai oleh proses '${PM2_APP}' yang sedang berjalan — akan dimuat ulang."
+if [[ -n "$PORT_PID" ]]; then
+  PM2_PID=""
+  if pm2 describe "$PM2_APP" >/dev/null 2>&1; then
+    PM2_PID="$(pm2 jlist 2>/dev/null | node -e '
+      let raw = "";
+      process.stdin.on("data", (d) => (raw += d));
+      process.stdin.on("end", () => {
+        try {
+          const app = JSON.parse(raw).find((a) => a.name === process.argv[1]);
+          process.stdout.write(app && app.pid ? String(app.pid) : "");
+        } catch { /* biarkan kosong */ }
+      });
+    ' "$PM2_APP")"
+  fi
+
+  if [[ -n "$PM2_PID" && "$PORT_PID" == "$PM2_PID" ]]; then
+    echo "Port dipakai oleh proses '${PM2_APP}' (pid ${PORT_PID}) — akan dimuat ulang."
   else
-    echo "$OWNER"
-    die "Port ${APP_PORT} sudah dipakai proses lain. Jalankan ulang dengan APP_PORT lain, misal:
-  APP_PORT=3020 ./deploy/bootstrap.sh"
+    ss -ltnpH "sport = :${APP_PORT}" 2>/dev/null | head -1
+    SUGGEST=$((APP_PORT + 1))
+    die "Port ${APP_PORT} dipakai proses lain (pid ${PORT_PID}), bukan '${PM2_APP}'.
+
+Periksa dulu pemiliknya:
+  ps -p ${PORT_PID} -o pid,comm,args --no-headers
+
+Lalu jalankan ulang dengan port yang bebas, misalnya:
+  APP_PORT=${SUGGEST} FORCE_NGINX=1 ./deploy/bootstrap.sh"
   fi
 else
   echo "Port ${APP_PORT} bebas."
