@@ -36,14 +36,41 @@ export const serviceMeta: { id: Pillar; deliverable: string }[] = [
 ];
 
 export const productMeta: {
-  id: "iotmaxhub" | "satumeja" | "web";
+  id: "iotmaxhub" | "satumeja";
   pillar: Pillar;
   domain: string;
   href: string;
 }[] = [
   { id: "iotmaxhub", pillar: "iot", domain: "iotmaxhub.com", href: "https://iotmaxhub.com" },
   { id: "satumeja", pillar: "pos", domain: "satumeja.com", href: "https://satumeja.com" },
-  { id: "web", pillar: "web", domain: "adhiteknologi.com", href: "#contact" },
+];
+
+export type ClientProjectId =
+  | "orensaGlobal"
+  | "indonesiaCommodities"
+  | "jualRumahTangerang"
+  | "orensaId";
+
+/**
+ * Situs klien yang sudah dikerjakan. Nama dan deskripsinya ada di kamus bahasa;
+ * di sini hanya domain dan tautannya, yang tidak diterjemahkan.
+ *
+ * orensaGlobal dan orensaId adalah klien yang sama — Orensa — dengan dua situs
+ * untuk dua pasar yang berbeda.
+ */
+export const clientProjects: {
+  id: ClientProjectId;
+  domain: string;
+  href: string;
+}[] = [
+  { id: "orensaGlobal", domain: "orensaglobal.com", href: "https://orensaglobal.com" },
+  {
+    id: "indonesiaCommodities",
+    domain: "indonesiatapiocastarchs.com",
+    href: "https://indonesiatapiocastarchs.com",
+  },
+  { id: "jualRumahTangerang", domain: "jualrumahtangerang.com", href: "https://jualrumahtangerang.com" },
+  { id: "orensaId", domain: "jualperlengkapanhotel.id", href: "https://jualperlengkapanhotel.id" },
 ];
 
 export const techGroups: { id: "frontend" | "backend" | "iot" | "mobile" | "infra"; items: string[] }[] = [
@@ -57,6 +84,7 @@ export const techGroups: { id: "frontend" | "backend" | "iot" | "mobile" | "infr
 export const sectionIds = {
   services: "services",
   products: "products",
+  portfolio: "portfolio",
   process: "process",
   tech: "tech",
   faq: "faq",

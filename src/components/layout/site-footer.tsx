@@ -5,7 +5,7 @@ import {
   LinkedinLogoIcon,
 } from "@phosphor-icons/react/dist/ssr";
 import { Logo } from "./logo";
-import { productMeta, sectionIds, serviceMeta, site } from "@/lib/site-config";
+import { clientProjects, productMeta, sectionIds, serviceMeta, site } from "@/lib/site-config";
 import type { Dictionary, Locale } from "@/lib/i18n";
 
 const socials = [
@@ -63,10 +63,16 @@ export function SiteFooter({ dict, locale }: { dict: Dictionary; locale: Locale 
 
         <FooterColumn title={t.columns.products}>
           {productMeta.map((meta) => (
-            <FooterLink key={meta.id} href={meta.href} external={meta.href.startsWith("http")}>
+            <FooterLink key={meta.id} href={meta.href} external>
               {dict.products.items[meta.id].name}
             </FooterLink>
           ))}
+          {clientProjects.slice(0, 2).map((meta) => (
+            <FooterLink key={meta.id} href={meta.href} external>
+              {dict.portfolio.items[meta.id].name}
+            </FooterLink>
+          ))}
+          <FooterLink href={`#${sectionIds.portfolio}`}>{dict.portfolio.eyebrow}</FooterLink>
         </FooterColumn>
 
         <FooterColumn title={t.columns.company}>

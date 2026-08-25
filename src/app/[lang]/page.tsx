@@ -3,6 +3,7 @@ import { Hero } from "@/components/sections/hero";
 import { Stats } from "@/components/sections/stats";
 import { Services } from "@/components/sections/services";
 import { Products } from "@/components/sections/products";
+import { Portfolio } from "@/components/sections/portfolio";
 import { Process } from "@/components/sections/process";
 import { WhyUs } from "@/components/sections/why-us";
 import { Tech } from "@/components/sections/tech";
@@ -21,6 +22,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
       <Stats dict={dict} />
       <Services dict={dict} />
       <Products dict={dict} />
+      <Portfolio dict={dict} />
       <Process dict={dict} />
       <WhyUs dict={dict} />
       <Tech dict={dict} />

@@ -21,6 +21,7 @@ export const id = {
     links: [
       { label: "Layanan", href: "#services" },
       { label: "Produk", href: "#products" },
+      { label: "Portofolio", href: "#portfolio" },
       { label: "Proses", href: "#process" },
       { label: "Teknologi", href: "#tech" },
       { label: "FAQ", href: "#faq" },
@@ -142,14 +143,43 @@ export const id = {
         body: "Sistem kasir untuk kafe, restoran, dan retail. Transaksi tetap tercatat saat offline, struk langsung tercetak, laporan penjualan siap tiap tutup shift.",
         features: ["Mode offline", "Struk thermal", "Kelola stok", "Laporan harian"],
       },
-      web: {
-        name: "Project Website Klien",
-        kicker: "Jasa Web",
-        status: "Terbuka untuk project",
-        body: "Company profile, landing page kampanye, dan aplikasi web internal yang dibangun sesuai kebutuhan tiap klien — termasuk situs yang sedang Anda buka ini.",
-        features: ["Company profile", "Landing page", "Web app", "E-commerce"],
+    },
+  },
+
+  portfolio: {
+    eyebrow: "Portofolio",
+    title: "Situs yang sudah kami kerjakan",
+    description:
+      "Empat situs klien yang sudah berjalan. Dua di antaranya milik perusahaan yang sama, dibuat terpisah karena pasarnya berbeda.",
+    newTab: "(buka di tab baru)",
+    items: {
+      orensaGlobal: {
+        name: "Orensa Global",
+        sector: "Perhotelan · Ekspor",
+        body: "Situs berbahasa Inggris untuk pemasok tekstil perhotelan — handuk, seprai, jubah, linen meja, dan amenitas — yang menyasar hotel, resort, dan spa di luar negeri.",
+        tags: ["Company profile", "Berbahasa Inggris", "Permintaan penawaran"],
+      },
+      indonesiaCommodities: {
+        name: "Indonesia Commodities",
+        sector: "Komoditas · B2B",
+        body: "Katalog B2B untuk distributor komoditas: tepung tapioka, dextrin, dan bubble starch. Menghubungkan pembeli dengan tiga produsen mitra di Indonesia.",
+        tags: ["Katalog produk", "B2B", "Halaman produsen"],
+      },
+      jualRumahTangerang: {
+        name: "Jual Rumah Tangerang",
+        sector: "Properti",
+        body: "Situs agen properti untuk wilayah Tangerang Raya, dengan listing rumah, apartemen, ruko, dan tanah yang bisa dicari per kawasan dan tipe.",
+        tags: ["Listing properti", "Pencarian & filter", "Artikel panduan"],
+      },
+      orensaId: {
+        name: "Orensa Indonesia",
+        sector: "Perhotelan · Domestik",
+        body: "Situs Orensa untuk pasar dalam negeri: katalog perlengkapan hotel dalam enam kategori, unduhan katalog PDF, dan konsultasi langsung lewat WhatsApp.",
+        tags: ["Katalog digital", "Unduh PDF", "Konsultasi WhatsApp"],
       },
     },
+    note: "Orensa Global dan Orensa Indonesia adalah klien yang sama, dengan dua situs untuk dua pasar.",
+    cta: "Ingin situs seperti ini?",
   },
 
   process: {

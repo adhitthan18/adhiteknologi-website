@@ -88,7 +88,8 @@ export function Products({ dict }: { dict: Dictionary }) {
       <div className="container-page">
         <SectionHeading eyebrow={t.eyebrow} title={t.title} description={t.description} />
 
-        <div className="mt-14 grid gap-6 lg:grid-cols-3">
+        {/* Dua produk, jadi dua kolom — tiga kolom akan menyisakan satu sel kosong. */}
+        <div className="mt-14 grid gap-6 md:grid-cols-2">
           {productMeta.map((meta) => {
             const copy = t.items[meta.id];
             const tone = accent[meta.pillar];

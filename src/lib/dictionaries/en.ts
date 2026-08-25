@@ -23,6 +23,7 @@ export const en: Dictionary = {
     links: [
       { label: "Services", href: "#services" },
       { label: "Products", href: "#products" },
+      { label: "Portfolio", href: "#portfolio" },
       { label: "Process", href: "#process" },
       { label: "Technology", href: "#tech" },
       { label: "FAQ", href: "#faq" },
@@ -144,14 +145,43 @@ export const en: Dictionary = {
         body: "A point-of-sale system for cafés, restaurants, and retail. Transactions still record while offline, receipts print straight away, and sales reports are ready at every shift close.",
         features: ["Offline mode", "Thermal receipts", "Stock control", "Daily reports"],
       },
-      web: {
-        name: "Client Website Projects",
-        kicker: "Web Services",
-        status: "Open for projects",
-        body: "Company profiles, campaign landing pages, and internal web apps built around each client's needs — including the site you are reading right now.",
-        features: ["Company profile", "Landing page", "Web app", "E-commerce"],
+    },
+  },
+
+  portfolio: {
+    eyebrow: "Portfolio",
+    title: "Sites we have delivered",
+    description:
+      "Four client sites now live. Two of them belong to the same company, built separately because they serve different markets.",
+    newTab: "(opens in a new tab)",
+    items: {
+      orensaGlobal: {
+        name: "Orensa Global",
+        sector: "Hospitality · Export",
+        body: "An English-language site for a hospitality textile supplier — towels, bed linen, robes, table linen, and amenities — aimed at hotels, resorts, and spas abroad.",
+        tags: ["Company profile", "English-language", "Quote requests"],
+      },
+      indonesiaCommodities: {
+        name: "Indonesia Commodities",
+        sector: "Commodities · B2B",
+        body: "A B2B catalogue for a commodity distributor: native tapioca starch, dextrin, and bubble starch. Connects buyers with three partner producers in Indonesia.",
+        tags: ["Product catalogue", "B2B", "Producer pages"],
+      },
+      jualRumahTangerang: {
+        name: "Jual Rumah Tangerang",
+        sector: "Property",
+        body: "A property agency site for the Greater Tangerang area, listing houses, apartments, shophouses, and land, searchable by district and type.",
+        tags: ["Property listings", "Search & filter", "Buyer guides"],
+      },
+      orensaId: {
+        name: "Orensa Indonesia",
+        sector: "Hospitality · Domestic",
+        body: "Orensa's site for the domestic market: a hotel supplies catalogue across six categories, a downloadable PDF catalogue, and direct consultation over WhatsApp.",
+        tags: ["Digital catalogue", "PDF download", "WhatsApp consultation"],
       },
     },
+    note: "Orensa Global and Orensa Indonesia are the same client, with two sites for two markets.",
+    cta: "Want a site like these?",
   },
 
   process: {
