@@ -81,10 +81,19 @@ export const techGroups: { id: "frontend" | "backend" | "iot" | "mobile" | "infr
   { id: "infra", items: ["Docker", "Nginx", "Vercel", "VPS", "CI/CD", "Cloudflare"] },
 ];
 
+/** Foto dokumentasi pelatihan Guru Melek Digital, dipublikasikan atas izin
+ *  peserta — lihat catatan `field.note` yang tampil di bawah galerinya. */
+export const fieldPhotos = [
+  { id: "robot", src: "/lapangan/robot-lego.webp", width: 1104, height: 736 },
+  { id: "merakit", src: "/lapangan/merakit.webp", width: 1104, height: 736 },
+  { id: "pendampingan", src: "/lapangan/pendampingan.webp", width: 1104, height: 736 },
+] as const;
+
 export const sectionIds = {
   services: "services",
   products: "products",
   portfolio: "portfolio",
+  field: "field",
   process: "process",
   tech: "tech",
   faq: "faq",

@@ -67,7 +67,7 @@ export function Services({ dict }: { dict: Dictionary }) {
           })}
         </div>
 
-        <div className="mt-6 grid gap-6 md:grid-cols-3">
+        <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {t.support.map((item) => (
             <Reveal
               key={item.title}

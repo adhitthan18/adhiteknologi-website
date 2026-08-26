@@ -121,6 +121,10 @@ export const en: Dictionary = {
         title: "UI/UX & Design Systems",
         body: "Flow research, wireframes, and a design system so the product stays coherent as features are added.",
       },
+      {
+        title: "Training & Workshops",
+        body: "Robotics, IoT, and digital-literacy training for teachers and in-house teams — using the equipment and material we prepare ourselves.",
+      },
     ],
   },
 
@@ -182,6 +186,19 @@ export const en: Dictionary = {
     },
     note: "Orensa Global and Orensa Indonesia are the same client, with two sites for two markets.",
     cta: "Want a site like these?",
+  },
+
+  field: {
+    eyebrow: "In the field",
+    title: "We teach what we build",
+    description:
+      "Alongside client projects, we train teachers and in-house teams on the same equipment we work with every day — robotics kits, microcontrollers, and the systems we build ourselves.",
+    photos: {
+      robot: "A training room full of participants, with the LEGO robots they built on the table",
+      merakit: "An instructor helping a participant run their robot from a laptop",
+      pendampingan: "One-to-one coaching at a participant's laptop",
+    },
+    note: "Documentation from the Guru Melek Digital training programme, published with the participants' consent.",
   },
 
   process: {

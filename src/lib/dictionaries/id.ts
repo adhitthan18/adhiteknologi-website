@@ -119,6 +119,10 @@ export const id = {
         title: "UI/UX & Design System",
         body: "Riset alur, wireframe, dan design system supaya produk tetap konsisten saat fitur bertambah.",
       },
+      {
+        title: "Pelatihan & Workshop",
+        body: "Pelatihan robotika, IoT, dan literasi digital untuk guru maupun tim internal — memakai perangkat dan materi yang kami siapkan sendiri.",
+      },
     ],
   },
 
@@ -180,6 +184,19 @@ export const id = {
     },
     note: "Orensa Global dan Orensa Indonesia adalah klien yang sama, dengan dua situs untuk dua pasar.",
     cta: "Ingin situs seperti ini?",
+  },
+
+  field: {
+    eyebrow: "Di lapangan",
+    title: "Kami mengajarkan apa yang kami bangun",
+    description:
+      "Selain mengerjakan proyek klien, kami melatih guru dan tim internal perusahaan memakai perangkat yang sama seperti yang kami pakai sehari-hari — kit robotika, mikrokontroler, dan sistem yang kami kembangkan sendiri.",
+    photos: {
+      robot: "Ruang pelatihan penuh peserta, dengan robot LEGO rakitan mereka di atas meja",
+      merakit: "Pengajar mendampingi seorang peserta menjalankan robotnya di laptop",
+      pendampingan: "Pendampingan satu per satu di depan laptop peserta",
+    },
+    note: "Dokumentasi pelatihan Guru Melek Digital, dipublikasikan atas izin peserta.",
   },
 
   process: {
