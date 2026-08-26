@@ -159,7 +159,12 @@ step "Memeriksa port ${APP_PORT}"
 # akan salah mengira aplikasi sendiri sebagai proses asing.
 PORT_PID=""
 if command -v ss >/dev/null; then
-  PORT_PID="$(ss -ltnpH "sport = :${APP_PORT}" 2>/dev/null | grep -oE 'pid=[0-9]+' | head -1 | cut -d= -f2)"
+  # `|| true` wajib: bila tidak ada yang mendengarkan, `ss` tidak mencetak apa
+  # pun dan `grep` keluar dengan status 1. Di bawah `set -o pipefail` status itu
+  # menjadi status seluruh pipeline, dan karena hasilnya ditugaskan ke variabel,
+  # `set -e` mematikan skrip tanpa satu pesan pun. Port kosong itu keadaan
+  # normal, bukan kegagalan.
+  PORT_PID="$(ss -ltnpH "sport = :${APP_PORT}" 2>/dev/null | grep -oE 'pid=[0-9]+' | head -1 | cut -d= -f2 || true)"
 fi
 
 if [[ -n "$PORT_PID" ]]; then
@@ -284,7 +289,9 @@ if [[ "$SETUP_NGINX" == "1" ]] && command -v nginx >/dev/null; then
     # `listen ... ssl http2;`, dan `http2 on;` justru membuat nginx -t gagal
     # dengan "unknown directive". Template memakai sintaks baru, lalu diturunkan
     # di sini bila versi Nginx di server memang belum mendukungnya.
-    NGINX_VER="$(nginx -v 2>&1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
+    # Sama seperti pemeriksaan port: grep yang tidak menemukan versi tidak boleh
+    # menjatuhkan skrip. Kalau kosong, perbandingan di bawah dilewati saja.
+    NGINX_VER="$(nginx -v 2>&1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1 || true)"
     OLDEST="$(printf '%s\n%s\n' "$NGINX_VER" "1.25.1" | sort -V | head -1)"
     if [[ "$NGINX_VER" != "1.25.1" && "$OLDEST" == "$NGINX_VER" ]]; then
       sed -i -e 's/^\([[:space:]]*\)listen \(\[::\]:\)\?443 ssl;$/\1listen \2443 ssl http2;/' \
