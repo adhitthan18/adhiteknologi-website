@@ -6,7 +6,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 import { useGSAP } from "@gsap/react";
 import { cn } from "@/lib/cn";
-import { heroScroll } from "@/lib/scroll-progress";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText);
 
@@ -62,13 +61,10 @@ export function ScrollAnimator() {
 
         // ---------------------------------------------------------------
         // Tanpa gerakan: tampilkan keadaan akhir, lalu selesai.
-        // Scroll hero tetap disambungkan ke scene 3D karena itu posisi, bukan
-        // animasi otomatis — pengguna sendiri yang menggerakkannya.
         // ---------------------------------------------------------------
         if (motionReduced) {
           gsap.set(revealTargets, { opacity: 1, y: 0 });
           if (splitTarget) gsap.set(splitTarget, { opacity: 1 });
-          heroScroll.progress = 0;
           return;
         }
 
@@ -128,24 +124,7 @@ export function ScrollAnimator() {
         }
 
         // ---------------------------------------------------------------
-        // 3. Scroll hero → scene 3D. Nilainya ditulis ke objek biasa supaya
-        // tidak memicu render ulang React tiap frame.
-        // ---------------------------------------------------------------
-        const hero = document.getElementById("hero");
-        if (hero) {
-          ScrollTrigger.create({
-            trigger: hero,
-            start: "top top",
-            end: "bottom top",
-            scrub: true,
-            onUpdate: (self) => {
-              heroScroll.progress = self.progress;
-            },
-          });
-        }
-
-        // ---------------------------------------------------------------
-        // 4. Parallax latar. Hanya transform — tidak memicu reflow.
+        // 3. Parallax latar. Hanya transform — tidak memicu reflow.
         // ---------------------------------------------------------------
         gsap.utils.toArray<HTMLElement>("[data-parallax]").forEach((el) => {
           gsap.to(el, {
@@ -161,7 +140,7 @@ export function ScrollAnimator() {
         });
 
         // ---------------------------------------------------------------
-        // 5. Angka statistik menghitung naik sekali saat masuk layar.
+        // 4. Angka statistik menghitung naik sekali saat masuk layar.
         // ---------------------------------------------------------------
         gsap.utils.toArray<HTMLElement>("[data-count]").forEach((el) => {
           const target = Number(el.dataset.count);
@@ -202,7 +181,7 @@ export function ScrollAnimator() {
         });
 
         // ---------------------------------------------------------------
-        // 6. Garis tahapan proses "digambar" mengikuti scroll.
+        // 5. Garis tahapan proses "digambar" mengikuti scroll.
         // ---------------------------------------------------------------
         const line = document.querySelector<HTMLElement>("[data-progress-line]");
         if (line?.parentElement) {

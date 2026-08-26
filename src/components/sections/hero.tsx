@@ -4,10 +4,9 @@ import {
   MonitorIcon,
   StorefrontIcon,
 } from "@phosphor-icons/react/dist/ssr";
-import { HeroCanvas } from "@/components/three/hero-canvas";
 import { ButtonLink } from "@/components/ui/button";
 import { Reveal } from "@/components/ui/reveal";
-import { sectionIds } from "@/lib/site-config";
+import { sectionIds, site } from "@/lib/site-config";
 import type { Dictionary } from "@/lib/i18n";
 
 const pillars = [
@@ -19,26 +18,25 @@ const pillars = [
 export function Hero({ dict }: { dict: Dictionary }) {
   const t = dict.hero;
 
-  // Flex column supaya `order` bisa memindahkan canvas ke bawah teks di layar
-  // sempit. Satu canvas saja untuk seluruh halaman — merender dua Canvas
-  // (satu disembunyikan CSS) tetap membuat dua konteks WebGL.
   return (
     <section
       id="hero"
-      className="relative isolate flex flex-col overflow-hidden pt-32 pb-16 sm:pt-40 lg:block lg:pb-28"
+      className="relative isolate overflow-hidden pt-32 pb-16 sm:pt-40 lg:pb-28"
     >
       <div className="absolute inset-0 -z-10 grid-backdrop" data-parallax aria-hidden="true" />
 
-      {/* Mobile: blok tersendiri di bawah teks, tidak menimpa apa pun.
-          Desktop (lg+): kembali menjadi lapisan absolut di belakang konten. */}
-      {/* `relative` wajib: isi HeroCanvas adalah `absolute inset-0`, dan tanpa
-          leluhur ber-posisi di sini ia akan berpatokan ke <section> lalu menutupi
-          seluruh hero — persis bug yang terjadi di layar sempit. */}
-      <div className="relative order-2 mt-10 h-[19rem] w-full sm:h-[23rem] lg:absolute lg:inset-x-0 lg:top-0 lg:-z-10 lg:order-none lg:mt-0 lg:h-[46rem]">
-        <HeroCanvas />
-      </div>
+      {/* Wordmark raksasa sebagai tekstur latar — pengganti scene 3D yang dulu
+          mengisi ruang ini. Sengaja dipotong tepi bawah <section> agar terasa
+          lebih besar dari layarnya, dan diletakkan di bawah supaya garisnya
+          tidak pernah berada di belakang paragraf. */}
+      <span
+        aria-hidden="true"
+        className="text-outline pointer-events-none absolute inset-x-0 bottom-0 -z-10 translate-y-[30%] select-none whitespace-nowrap text-center text-[clamp(3.5rem,13vw,10rem)] font-extrabold uppercase leading-[0.8] tracking-tight"
+      >
+        {site.name}
+      </span>
 
-      <div className="container-page relative order-1 lg:order-none">
+      <div className="container-page relative">
         <div className="max-w-3xl">
           <Reveal className="inline-flex items-center gap-2.5 rounded-[var(--radius-pill)] border border-line bg-glass px-4 py-2 backdrop-blur-md">
             <span

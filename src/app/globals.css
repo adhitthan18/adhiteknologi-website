@@ -38,6 +38,10 @@
   --gold: #f5b301;
   --gold-soft: rgba(245, 179, 1, 0.14);
 
+  /* Garis wordmark raksasa di hero. Sengaja setipis ini: ia berada di belakang
+     teks yang harus tetap terbaca, jadi perannya tekstur, bukan tulisan. */
+  --outline-stroke: rgba(11, 18, 32, 0.13);
+
   /* Gradien marka logo, mengikuti ati-marka-primer.svg */
   --mark-left-from: #0a1f44;
   --mark-left-to: #15366f;
@@ -87,6 +91,8 @@
   /* Di latar gelap emas justru terbaca (10,7:1), jadi boleh dipakai untuk teks. */
   --gold: #ffd500;
   --gold-soft: rgba(255, 213, 0, 0.16);
+
+  --outline-stroke: rgba(242, 246, 252, 0.15);
 
   /* Marka versi reverse: kaki kiri putih, kaki kanan biru muda. */
   --mark-left-from: #ffffff;
@@ -223,6 +229,12 @@ body {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+@utility text-outline {
+  color: transparent;
+  -webkit-text-stroke-width: clamp(1px, 0.14vw, 2px);
+  -webkit-text-stroke-color: var(--outline-stroke);
 }
 
 @utility grid-backdrop {
