@@ -27,8 +27,54 @@ type FeedProject = {
   summary: string;
   url: string;
   tags: string[];
-  kind: "produk" | "klien";
+  kind: "produk" | "klien" | "internal";
 };
+
+/**
+ * Pekerjaan yang tidak tampil di halaman portofolio: firmware, tooling, dan
+ * situs perusahaan sendiri. Didaftar manual di sini — bukan duplikasi, sebab
+ * projek-projek ini memang tidak punya entri di site-config.ts. Menaruhnya di
+ * sana justru akan memunculkannya di section "Situs yang sudah kami kerjakan",
+ * padahal isinya bukan situs klien.
+ */
+const internalProjects: FeedProject[] = [
+  {
+    id: "adhiteknologiWeb",
+    title: "adhiteknologi.com",
+    summary:
+      "Situs perusahaan kami sendiri: dua bahasa, dirender di server, dan dideploy sebagai bundel standalone di VPS sendiri di balik Nginx — bukan menumpang platform pihak ketiga.",
+    url: "https://adhiteknologi.com",
+    tags: ["Next.js", "TypeScript", "Tailwind CSS", "Dwibahasa", "VPS + Nginx"],
+    kind: "internal",
+  },
+  {
+    id: "relay6MejaEsp32",
+    title: "Kontrol Relay 6 Meja",
+    summary:
+      "Firmware ESP32 untuk menyalakan dan mematikan enam meja biliar sekaligus, lengkap dengan timer per meja. Kontrol lokal lewat Ethernet tetap jalan saat internet mati, sementara pengawasan jarak jauh berjalan lewat WiFi ke IoT Max Hub. Pendaftaran perangkat cukup dengan memindai QR yang ditampilkan perangkat itu sendiri.",
+    url: "https://iotmaxhub.com",
+    tags: ["ESP32", "W5500 Ethernet", "Relay", "Provisioning QR", "Telemetri"],
+    kind: "internal",
+  },
+  {
+    id: "linkedinAutopost",
+    title: "LinkedIn Project Autopost",
+    summary:
+      "Automation yang memantau feed projek di situs ini, menyusun draft caption LinkedIn, lalu memposting setelah draftnya disetujui manusia. Memakai Posts API resmi LinkedIn, bukan bot yang menyamar sebagai aktivitas manusia.",
+    url: "https://adhiteknologi.com",
+    tags: ["Node.js", "OAuth 2.0", "LinkedIn API", "GitHub Actions"],
+    kind: "internal",
+  },
+  {
+    id: "jejakOsint",
+    title: "jejak — OSINT Footprint Toolkit",
+    summary:
+      "CLI modular untuk audit jejak digital: memeriksa paparan data akun sendiri, meninjau domain yang kita kelola, dan membaca metadata berkas sebelum dipublikasikan. Dibatasi untuk target milik sendiri atau yang sudah memberi izin.",
+    url: "https://adhiteknologi.com",
+    tags: ["Python", "CLI", "Keamanan", "Audit jejak digital"],
+    kind: "internal",
+  },
+];
 
 export function GET() {
   // Produk sendiri lebih dulu — ini yang paling layak diumumkan di LinkedIn.
@@ -64,7 +110,7 @@ export function GET() {
     {
       source: site.url,
       generatedFrom: "src/lib/site-config.ts + src/lib/dictionaries/id.ts",
-      projects: [...products, ...clients],
+      projects: [...products, ...clients, ...internalProjects],
     },
     {
       headers: {
