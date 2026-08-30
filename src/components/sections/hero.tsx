@@ -1,3 +1,4 @@
+import Image from "next/image";
 import {
   ArrowRightIcon,
   CubeIcon,
@@ -36,8 +37,29 @@ export function Hero({ dict }: { dict: Dictionary }) {
         {site.name}
       </span>
 
+      {/* Foto pendiri, latar sudah dilepas, ditaruh di kiri: telunjuknya
+          mengarah ke kanan, jadi mata pembaca ditarik MASUK ke tulisan.
+          Kalau foto ditaruh di kanan, arah tunjuknya keluar halaman.
+
+          Muncul dari xl ke atas saja — di bawah itu lebarnya bertabrakan
+          dengan blok teks. pointer-events-none supaya tidak pernah
+          menghalangi tombol CTA di belakangnya. */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 hidden justify-start xl:flex">
+        <div className="container-page flex justify-start">
+          <Image
+            src="/tim/adhi.webp"
+            alt={t.photoAlt}
+            width={1073}
+            height={1635}
+            priority
+            sizes="(min-width: 1536px) 420px, 360px"
+            className="h-[34rem] w-auto object-contain object-bottom 2xl:h-[40rem]"
+          />
+        </div>
+      </div>
+
       <div className="container-page relative">
-        <div className="max-w-3xl">
+        <div className="max-w-3xl xl:ml-auto">
           <Reveal className="inline-flex items-center gap-2.5 rounded-[var(--radius-pill)] border border-line bg-glass px-4 py-2 backdrop-blur-md">
             <span
               className="h-2 w-2 rounded-full bg-brand [animation:pulse-dot_2.4s_ease-in-out_infinite]"

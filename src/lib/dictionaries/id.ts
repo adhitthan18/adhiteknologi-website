@@ -56,6 +56,7 @@ export const id = {
       "PT Adhi Teknologi Indonesia mengerjakan pembuatan website, perangkat serta platform IoT, dan sistem POS untuk usaha di Indonesia. Dari perencanaan, pengembangan, sampai perawatan setelah rilis.",
     ctaPrimary: "Mulai project Anda",
     ctaSecondary: "Lihat produk kami",
+    photoAlt: "Pendiri Adhi Teknologi membawakan sesi pelatihan robotika",
     pillars: { web: "Website & Web App", iot: "Solusi IoT", pos: "Sistem POS" },
   },
 

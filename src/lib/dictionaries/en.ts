@@ -58,6 +58,7 @@ export const en: Dictionary = {
       "PT Adhi Teknologi Indonesia builds websites, IoT hardware and platforms, and POS systems for businesses across Indonesia. From planning and development through to support after launch.",
     ctaPrimary: "Start your project",
     ctaSecondary: "See our products",
+    photoAlt: "Adhi Teknologi's founder leading a robotics training session",
     pillars: { web: "Websites & Web Apps", iot: "IoT Solutions", pos: "POS Systems" },
   },
 
