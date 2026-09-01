@@ -99,7 +99,7 @@ export function ScrollAnimator() {
         // ---------------------------------------------------------------
         if (splitTarget) {
           gsap.set(splitTarget, { opacity: 1 });
-          const split = new SplitText(splitTarget, { type: "words" });
+          const split = new SplitText(splitTarget, { type: "words", mask: "words" });
 
           // Gradien teks bekerja lewat `background-clip: text` + `color: transparent`.
           // Begitu SplitText memindahkan teksnya ke elemen anak, anak itu mewarisi
@@ -111,12 +111,17 @@ export function ScrollAnimator() {
             if (el.closest(".text-gradient")) el.classList.add("text-gradient");
           });
 
+          // Muncul dari balik topeng: kata digeser turun penuh lalu naik ke
+          // tempatnya sambil kehilangan blur. `mask: "words"` membuat SplitText
+          // menambahkan pembungkus overflow-hidden sendiri, jadi bagian kata
+          // yang masih di bawah benar-benar terpotong, bukan sekadar transparan.
           gsap.from(split.words, {
+            yPercent: 105,
+            filter: "blur(20px)",
             opacity: 0,
-            yPercent: 60,
-            duration: 0.7,
+            duration: 1.3,
             ease: "expo.out",
-            stagger: 0.045,
+            stagger: 0.1,
           });
           // Kembalikan node teks aslinya agar pembaca layar dan alat bantu lain
           // tidak menemukan teks yang terpecah-pecah.
@@ -124,7 +129,31 @@ export function ScrollAnimator() {
         }
 
         // ---------------------------------------------------------------
-        // 3. Parallax latar. Hanya transform — tidak memicu reflow.
+        // 3. Wordmark raksasa — huruf demi huruf, masuk dari kiri.
+        // Aman dipecah per huruf karena elemennya aria-hidden dan hanya
+        // berisi dua kata; pembaca layar tidak pernah menyentuhnya.
+        // ---------------------------------------------------------------
+        const markTarget = document.querySelector<HTMLElement>("[data-split-chars]");
+        if (markTarget) {
+          const splitMark = new SplitText(markTarget, { type: "chars", mask: "chars" });
+
+          // Garis luar huruf dibuat oleh -webkit-text-stroke, dan itu diwarisi
+          // anak. Tapi `color: transparent` juga diwarisi, jadi huruf hasil
+          // pecahan tetap tampil sebagai garis — tidak ada yang perlu ditambal.
+          gsap.from(splitMark.chars, {
+            xPercent: -105,
+            filter: "blur(20px)",
+            opacity: 0,
+            duration: 1.2,
+            ease: "expo.out",
+            stagger: 0.09,
+          });
+
+          cleanups.push(() => splitMark.revert());
+        }
+
+        // ---------------------------------------------------------------
+        // 4. Parallax latar. Hanya transform — tidak memicu reflow.
         // ---------------------------------------------------------------
         gsap.utils.toArray<HTMLElement>("[data-parallax]").forEach((el) => {
           gsap.to(el, {
@@ -140,7 +169,7 @@ export function ScrollAnimator() {
         });
 
         // ---------------------------------------------------------------
-        // 4. Angka statistik menghitung naik sekali saat masuk layar.
+        // 5. Angka statistik menghitung naik sekali saat masuk layar.
         // ---------------------------------------------------------------
         gsap.utils.toArray<HTMLElement>("[data-count]").forEach((el) => {
           const target = Number(el.dataset.count);
@@ -181,7 +210,7 @@ export function ScrollAnimator() {
         });
 
         // ---------------------------------------------------------------
-        // 5. Garis tahapan proses "digambar" mengikuti scroll.
+        // 6. Garis tahapan proses "digambar" mengikuti scroll.
         // ---------------------------------------------------------------
         const line = document.querySelector<HTMLElement>("[data-progress-line]");
         if (line?.parentElement) {

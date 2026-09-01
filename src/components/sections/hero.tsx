@@ -32,6 +32,7 @@ export function Hero({ dict }: { dict: Dictionary }) {
           tidak pernah berada di belakang paragraf. */}
       <span
         aria-hidden="true"
+        data-split-chars
         className="text-outline pointer-events-none absolute inset-x-0 bottom-0 -z-10 translate-y-[30%] select-none whitespace-nowrap text-center text-[clamp(3.5rem,13vw,10rem)] font-extrabold uppercase leading-[0.8] tracking-tight"
       >
         {site.name}
@@ -62,7 +63,7 @@ export function Hero({ dict }: { dict: Dictionary }) {
         <div className="max-w-3xl xl:ml-auto">
           <Reveal className="inline-flex items-center gap-2.5 rounded-[var(--radius-pill)] border border-line bg-glass px-4 py-2 backdrop-blur-md">
             <span
-              className="h-2 w-2 rounded-full bg-brand [animation:pulse-dot_2.4s_ease-in-out_infinite]"
+              className="status-dot h-2 w-2 rounded-full bg-brand"
               aria-hidden="true"
             />
             <span className="text-xs font-semibold tracking-wide text-fg-muted">{t.badge}</span>
