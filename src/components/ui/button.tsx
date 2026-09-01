@@ -14,7 +14,7 @@ const variants: Record<Variant, string> = {
   primary:
     "bg-brand text-brand-fg shadow-[0_8px_24px_-10px_var(--brand)] hover:brightness-110 hover:shadow-[0_12px_32px_-10px_var(--brand)]",
   secondary:
-    "glass text-fg hover:border-line-strong hover:bg-surface-2",
+    "glass backdrop-blur-md backdrop-saturate-150 text-fg hover:border-line-strong hover:bg-surface-2",
   ghost: "text-fg-muted hover:text-fg hover:bg-surface-2",
 };
 

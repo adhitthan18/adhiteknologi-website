@@ -49,6 +49,8 @@ export const en: Dictionary = {
     switchTo: "View in Indonesian",
   },
 
+  cursor: { hello: "Say hello" },
+
   hero: {
     badge: "Software house · Taking on new projects",
     titleStart: "Websites, ",

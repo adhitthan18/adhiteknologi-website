@@ -47,6 +47,8 @@ export const id = {
     switchTo: "Lihat dalam Bahasa Inggris",
   },
 
+  cursor: { hello: "Sapa kami" },
+
   hero: {
     badge: "Software house · Menerima project baru",
     titleStart: "Website, ",
