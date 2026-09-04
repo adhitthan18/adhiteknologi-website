@@ -7,7 +7,6 @@ import { ThemeProvider } from "@/components/providers/theme-provider";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { ScrollAnimator } from "@/components/ui/reveal";
-import { CustomCursor } from "@/components/ui/custom-cursor";
 import { site } from "@/lib/site-config";
 import { getDictionary, isLocale, locales, type Locale } from "@/lib/i18n";
 
@@ -147,7 +146,6 @@ export default async function LangLayout({
           <main id="konten">{children}</main>
           <SiteFooter dict={dict} locale={locale} />
           <ScrollAnimator />
-          <CustomCursor label={dict.cursor.hello} />
         </ThemeProvider>
 
         <Script

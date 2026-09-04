@@ -13,7 +13,7 @@
  * halaman portofolio, supaya tidak ada daftar kedua yang bisa ikut basi.
  */
 
-import { clientProjects, productMeta, site } from "@/lib/site-config";
+import { clientProjects, productMeta, sectionIds, site } from "@/lib/site-config";
 import { id as dict } from "@/lib/dictionaries/id";
 
 // Isinya diturunkan dari konstanta build-time, tidak dari request. Menandainya
@@ -96,7 +96,10 @@ export function GET() {
       id: meta.id,
       title: copy.name,
       summary: copy.body,
-      url: meta.href,
+      // Pekerjaan perangkat keras tidak punya alamat sendiri. Ketimbang
+      // membuat `url` opsional dan memaksa watcher menangani kekosongan,
+      // tautannya diarahkan ke section portofolio tempat projek itu tampil.
+      url: meta.href ?? `${site.url}/id#${sectionIds.portfolio}`,
       tags: [...copy.tags],
       kind: "klien",
     };

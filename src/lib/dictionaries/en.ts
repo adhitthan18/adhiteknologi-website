@@ -49,7 +49,6 @@ export const en: Dictionary = {
     switchTo: "View in Indonesian",
   },
 
-  cursor: { hello: "Say hello" },
 
   hero: {
     badge: "Software house · Taking on new projects",
@@ -157,9 +156,9 @@ export const en: Dictionary = {
 
   portfolio: {
     eyebrow: "Portfolio",
-    title: "Sites we have delivered",
+    title: "Projects we have delivered",
     description:
-      "Four client sites now live. Two of them belong to the same company, built separately because they serve different markets.",
+      "Four client sites now live, plus an electronics board we designed and assembled ourselves. Two of the sites belong to the same company, built separately because they serve different markets.",
     newTab: "(opens in a new tab)",
     items: {
       orensaGlobal: {
@@ -186,9 +185,20 @@ export const en: Dictionary = {
         body: "Orensa's site for the domestic market: a hotel supplies catalogue across six categories, a downloadable PDF catalogue, and direct consultation over WhatsApp.",
         tags: ["Digital catalogue", "PDF download", "WhatsApp consultation"],
       },
+      pcbRelay: {
+        name: "ESP32 Relay Control Board",
+        sector: "Electronics · Design & Assembly",
+        body: "Schematic design, PCB layout, and assembly of an ESP32-based control board for remote monitoring and switching — vibration sensing, voltage and current metering, two relay channels, and an on-site status display. Taken from breadboard prototype through to installed unit, firmware and testing included.",
+        tags: [
+          "Schematic & PCB layout",
+          "Assembly & testing",
+          "ESP32 firmware",
+          "Enclosure & wiring",
+        ],
+      },
     },
     note: "Orensa Global and Orensa Indonesia are the same client, with two sites for two markets.",
-    cta: "Want a site like these?",
+    cta: "Want a project like these?",
   },
 
   field: {

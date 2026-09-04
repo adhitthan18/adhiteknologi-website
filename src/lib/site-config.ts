@@ -49,19 +49,26 @@ export type ClientProjectId =
   | "orensaGlobal"
   | "indonesiaCommodities"
   | "jualRumahTangerang"
-  | "orensaId";
+  | "orensaId"
+  | "pcbRelay";
 
 /**
- * Situs klien yang sudah dikerjakan. Nama dan deskripsinya ada di kamus bahasa;
+ * Pekerjaan yang sudah selesai. Nama dan deskripsinya ada di kamus bahasa;
  * di sini hanya domain dan tautannya, yang tidak diterjemahkan.
  *
  * orensaGlobal dan orensaId adalah klien yang sama — Orensa — dengan dua situs
  * untuk dua pasar yang berbeda.
+ *
+ * `domain` dan `href` opsional: pekerjaan perangkat keras tidak punya alamat
+ * web, jadi kartunya melewatkan baris tautan sama sekali. `wide` melebarkan
+ * kartu jadi dua kolom supaya baris terakhir tidak menyisakan sel kosong.
  */
 export const clientProjects: {
   id: ClientProjectId;
-  domain: string;
-  href: string;
+  domain?: string;
+  href?: string;
+  pillar?: Pillar;
+  wide?: boolean;
 }[] = [
   { id: "orensaGlobal", domain: "orensaglobal.com", href: "https://orensaglobal.com" },
   {
@@ -71,7 +78,20 @@ export const clientProjects: {
   },
   { id: "jualRumahTangerang", domain: "jualrumahtangerang.com", href: "https://jualrumahtangerang.com" },
   { id: "orensaId", domain: "jualperlengkapanhotel.id", href: "https://jualperlengkapanhotel.id" },
+  { id: "pcbRelay", pillar: "iot", wide: true },
 ];
+
+/**
+ * Bagian dari `clientProjects` yang punya alamat web, dengan tipe yang sudah
+ * dipersempit sehingga `href` dan `domain` dijamin ada.
+ *
+ * Dipakai tempat-tempat yang isinya memang harus berupa tautan — footer,
+ * misalnya. Pekerjaan perangkat keras tidak punya alamat dan tersaring di sini,
+ * bukan dilewati satu per satu di tiap pemanggil.
+ */
+export const linkedProjects = clientProjects.filter(
+  (p): p is typeof p & { domain: string; href: string } => Boolean(p.href && p.domain),
+);
 
 export const techGroups: { id: "frontend" | "backend" | "iot" | "mobile" | "infra"; items: string[] }[] = [
   { id: "frontend", items: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Three.js", "GSAP"] },

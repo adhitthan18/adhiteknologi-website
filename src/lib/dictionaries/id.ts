@@ -47,7 +47,6 @@ export const id = {
     switchTo: "Lihat dalam Bahasa Inggris",
   },
 
-  cursor: { hello: "Sapa kami" },
 
   hero: {
     badge: "Software house · Menerima project baru",
@@ -155,9 +154,9 @@ export const id = {
 
   portfolio: {
     eyebrow: "Portofolio",
-    title: "Situs yang sudah kami kerjakan",
+    title: "Proyek yang sudah kami kerjakan",
     description:
-      "Empat situs klien yang sudah berjalan. Dua di antaranya milik perusahaan yang sama, dibuat terpisah karena pasarnya berbeda.",
+      "Empat situs klien yang sudah berjalan, ditambah papan elektronik yang kami desain dan rakit sendiri. Dua situs di antaranya milik perusahaan yang sama, dibuat terpisah karena pasarnya berbeda.",
     newTab: "(buka di tab baru)",
     items: {
       orensaGlobal: {
@@ -184,9 +183,20 @@ export const id = {
         body: "Situs Orensa untuk pasar dalam negeri: katalog perlengkapan hotel dalam enam kategori, unduhan katalog PDF, dan konsultasi langsung lewat WhatsApp.",
         tags: ["Katalog digital", "Unduh PDF", "Konsultasi WhatsApp"],
       },
+      pcbRelay: {
+        name: "Papan Kendali Relay ESP32",
+        sector: "Elektronika · Desain & Perakitan",
+        body: "Desain skematik, tata letak PCB, dan perakitan papan kendali berbasis ESP32 untuk pemantauan dan penyaklaran jarak jauh — sensor getar, pengukur arus dan tegangan, dua kanal relay, serta layar status di lapangan. Dikerjakan dari prototipe breadboard sampai unit terpasang, berikut firmware dan pengujiannya.",
+        tags: [
+          "Skematik & layout PCB",
+          "Perakitan & pengujian",
+          "Firmware ESP32",
+          "Enclosure & wiring",
+        ],
+      },
     },
     note: "Orensa Global dan Orensa Indonesia adalah klien yang sama, dengan dua situs untuk dua pasar.",
-    cta: "Ingin situs seperti ini?",
+    cta: "Ingin proyek seperti ini?",
   },
 
   field: {

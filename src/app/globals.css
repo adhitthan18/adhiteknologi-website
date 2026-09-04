@@ -291,63 +291,6 @@ html.gsap-ready .js-reveal {
   .status-dot::after { opacity: 0; }
 }
 
-/* ---------- Kursor kustom ---------- */
-.cursor-cincin,
-.cursor-pil {
-  position: fixed;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-  opacity: 0;
-  transform: translate(-50%, -50%) scale(0);
-  will-change: transform, opacity;
-}
-
-.cursor-cincin[data-aktif="true"],
-.cursor-pil[data-aktif="true"] {
-  opacity: 1;
-}
-
-.cursor-cincin {
-  /* Di bawah header yang z-50 supaya menu tetap bisa dibaca, tapi di atas
-     seluruh isi halaman. */
-  z-index: 40;
-  width: 46px;
-  height: 46px;
-  border: 1.5px solid var(--brand);
-  border-radius: 9999px;
-  transition: opacity 0.4s var(--ease-out-expo), border-color 0.4s ease;
-}
-
-.cursor-cincin[data-lebar="true"] {
-  border-color: var(--border-strong);
-}
-
-.cursor-pil {
-  z-index: 41;
-  padding: 0.55rem 1.15rem;
-  border-radius: 9999px;
-  border: 1px solid var(--border);
-  background-color: var(--surface-glass);
-  /* Blur datang dari class Tailwind di JSX — lihat catatan pada @utility glass. */
-  color: var(--brand);
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  transition: opacity 0.4s var(--ease-out-expo);
-}
-
-/* Layar sentuh tidak punya kursor untuk diikuti, dan orang yang meminta
-   sedikit gerakan tidak perlu benda yang mengejar penunjuknya. */
-@media (pointer: coarse), (prefers-reduced-motion: reduce) {
-  .cursor-cincin,
-  .cursor-pil {
-    display: none;
-  }
-}
-
 @keyframes marquee-x {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
