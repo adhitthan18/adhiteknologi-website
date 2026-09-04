@@ -186,13 +186,13 @@ export const en: Dictionary = {
         tags: ["Digital catalogue", "PDF download", "WhatsApp consultation"],
       },
       pcbRelay: {
-        name: "ESP32 Relay Control Board",
+        name: "Relay Control Board",
         sector: "Electronics · Design & Assembly",
-        body: "Schematic design, PCB layout, and assembly of an ESP32-based control board for remote monitoring and switching — vibration sensing, voltage and current metering, two relay channels, and an on-site status display. Taken from breadboard prototype through to installed unit, firmware and testing included.",
+        body: "Schematic design, PCB layout, and assembly of microcontroller and microprocessor control boards for remote monitoring and switching — vibration sensing, voltage and current metering, two relay channels, and an on-site status display. Taken from breadboard prototype through to installed unit, firmware and testing included.",
         tags: [
           "Schematic & PCB layout",
           "Assembly & testing",
-          "ESP32 firmware",
+          "Microcontroller firmware",
           "Enclosure & wiring",
         ],
       },

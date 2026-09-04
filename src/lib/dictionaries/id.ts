@@ -184,13 +184,13 @@ export const id = {
         tags: ["Katalog digital", "Unduh PDF", "Konsultasi WhatsApp"],
       },
       pcbRelay: {
-        name: "Papan Kendali Relay ESP32",
+        name: "Papan Kendali Relay",
         sector: "Elektronika · Desain & Perakitan",
-        body: "Desain skematik, tata letak PCB, dan perakitan papan kendali berbasis ESP32 untuk pemantauan dan penyaklaran jarak jauh — sensor getar, pengukur arus dan tegangan, dua kanal relay, serta layar status di lapangan. Dikerjakan dari prototipe breadboard sampai unit terpasang, berikut firmware dan pengujiannya.",
+        body: "Desain skematik, tata letak PCB, dan perakitan papan kendali berbasis mikrokontroler dan mikroprosesor untuk pemantauan dan penyaklaran jarak jauh — sensor getar, pengukur arus dan tegangan, dua kanal relay, serta layar status di lapangan. Dikerjakan dari prototipe breadboard sampai unit terpasang, berikut firmware dan pengujiannya.",
         tags: [
           "Skematik & layout PCB",
           "Perakitan & pengujian",
-          "Firmware ESP32",
+          "Firmware mikrokontroler",
           "Enclosure & wiring",
         ],
       },
